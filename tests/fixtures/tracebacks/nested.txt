@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/app/src/api/handler.py", line 25, in handle_request
+    data = fetch_user_data(user_id)
+  File "/app/src/services/user.py", line 58, in fetch_user_data
+    response = client.get(f"/users/{user_id}")
+  File "/app/src/http/client.py", line 102, in get
+    return self._request("GET", url)
+  File "/app/src/http/client.py", line 78, in _request
+    raise ConnectionError(f"Failed to connect to {self.base_url}")
+ConnectionError: Failed to connect to https://api.example.com
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/src/main.py", line 15, in main
+    result = process_user(user_id=123)
+  File "/app/src/api/handler.py", line 28, in handle_request
+    raise ServiceUnavailableError("User service unavailable") from e
+ServiceUnavailableError: User service unavailable

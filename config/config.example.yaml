@@ -1,0 +1,192 @@
+# =============================================================================
+# AI Issue Agent Configuration
+# =============================================================================
+# Environment variables can be referenced as ${VAR_NAME}
+# Required variables are marked with [REQUIRED]
+
+# -----------------------------------------------------------------------------
+# Chat Platform Configuration
+# -----------------------------------------------------------------------------
+chat:
+  # Provider: "slack" | "discord" | "teams"
+  provider: slack
+
+  slack:
+    # [REQUIRED] Bot OAuth token (xoxb-...)
+    bot_token: ${SLACK_BOT_TOKEN}
+
+    # [REQUIRED] App-level token for Socket Mode (xapp-...)
+    app_token: ${SLACK_APP_TOKEN}
+
+    # Channels to monitor (by ID or name)
+    # If empty, monitors all channels the bot is invited to
+    channels:
+      - "#errors"
+      - "#production-alerts"
+
+    # Reaction to add when processing starts
+    processing_reaction: "eyes"
+
+    # Reaction to add when processing completes
+    complete_reaction: "white_check_mark"
+
+    # Reaction to add on error
+    error_reaction: "x"
+
+# -----------------------------------------------------------------------------
+# Version Control System Configuration
+# -----------------------------------------------------------------------------
+vcs:
+  # Provider: "github" | "gitlab" | "bitbucket"
+  provider: github
+
+  github:
+    # Default repository if not detected from message/channel
+    default_repo: "myorg/myproject"
+
+    # Directory for cloning repositories
+    clone_dir: "/tmp/ai-issue-agent/repos"
+
+    # Maximum age of cached clones before refresh (seconds)
+    clone_cache_ttl: 3600
+
+    # Labels to add to created issues
+    default_labels:
+      - "auto-triaged"
+      - "needs-review"
+
+    # gh CLI path (if not in PATH)
+    gh_path: null
+
+    # Allowed repositories (empty = allow default_repo only)
+    allowed_repos: []
+
+  # Channel-to-repository mapping
+  # Maps chat channels to specific repositories
+  channel_repos:
+    "#frontend-errors": "myorg/frontend"
+    "#backend-errors": "myorg/backend"
+    "#infra-alerts": "myorg/infrastructure"
+
+  # Require explicit opt-in for public repos
+  allow_public_repos: false
+
+# -----------------------------------------------------------------------------
+# LLM Provider Configuration
+# -----------------------------------------------------------------------------
+llm:
+  # Provider: "openai" | "anthropic" | "ollama"
+  provider: anthropic
+
+  openai:
+    api_key: ${OPENAI_API_KEY}
+    model: "gpt-4-turbo-preview"
+    max_tokens: 4096
+    temperature: 0.3
+
+  anthropic:
+    api_key: ${ANTHROPIC_API_KEY}
+    model: "claude-3-sonnet-20240229"
+    max_tokens: 4096
+    temperature: 0.3
+
+  ollama:
+    base_url: "http://localhost:11434"
+    model: "llama2:70b"
+    timeout: 120
+    # Must be true to use non-localhost hosts (SSRF prevention)
+    allow_remote_host: false
+
+# -----------------------------------------------------------------------------
+# Issue Matching Configuration
+# -----------------------------------------------------------------------------
+matching:
+  # Minimum confidence score to consider an issue a match (0.0 - 1.0)
+  confidence_threshold: 0.85
+
+  # Maximum number of issues to search
+  max_search_results: 20
+
+  # Search in closed issues too?
+  include_closed: true
+
+  # How long to cache search results (seconds)
+  search_cache_ttl: 300
+
+  # Weights for different matching criteria
+  weights:
+    exception_type: 0.3
+    exception_message: 0.4
+    stack_frames: 0.2
+    semantic_similarity: 0.1
+
+# -----------------------------------------------------------------------------
+# Code Analysis Configuration
+# -----------------------------------------------------------------------------
+analysis:
+  # Lines of context to extract around error location
+  context_lines: 15
+
+  # Maximum files to analyze per traceback
+  max_files: 10
+
+  # Skip frames from these paths (stdlib, site-packages)
+  skip_paths:
+    - "/usr/lib/python"
+    - "site-packages"
+    - "<frozen"
+
+  # Include these additional files if present
+  include_files:
+    - "README.md"
+    - "pyproject.toml"
+
+# -----------------------------------------------------------------------------
+# Logging Configuration
+# -----------------------------------------------------------------------------
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  format: json  # json or console
+
+  # Log to file?
+  file:
+    enabled: false
+    path: "/var/log/ai-issue-agent/agent.log"
+    rotation: "10 MB"
+    retention: 7  # days
+
+# -----------------------------------------------------------------------------
+# Runtime Configuration
+# -----------------------------------------------------------------------------
+runtime:
+  # Maximum concurrent message processing
+  max_concurrent: 5
+
+  # Timeout for entire message processing pipeline (seconds)
+  processing_timeout: 300
+
+  # Retry configuration for transient failures
+  retry:
+    max_attempts: 3
+    initial_delay: 1.0
+    max_delay: 30.0
+    exponential_base: 2.0
+
+# -----------------------------------------------------------------------------
+# Data Retention Configuration
+# -----------------------------------------------------------------------------
+data_retention:
+  # Cloned repositories
+  clone_cache:
+    max_age_hours: 24
+    max_total_size_gb: 10
+    cleanup_interval_minutes: 60
+
+  # Processed message cache
+  message_cache:
+    max_age_hours: 1
+    max_entries: 1000
+
+  # Search result cache
+  search_cache:
+    max_age_minutes: 5

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/app/src/main.py", line 42, in process_request
+    result = calculate_value(data)
+  File "/app/src/calculator.py", line 15, in calculate_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'not_a_number'
