@@ -1,0 +1,22 @@
+[
+  {
+    "number": 123,
+    "title": "ValueError in calculate_value when processing non-numeric input",
+    "body": "## Summary\nThe `calculate_value` function raises a ValueError when passed non-numeric string input.\n\n## Traceback\n```\nTraceback (most recent call last):\n  File \"/app/src/main.py\", line 42, in process_request\n    result = calculate_value(data)\n  File \"/app/src/calculator.py\", line 15, in calculate_value\n    return int(value)\nValueError: invalid literal for int() with base 10: 'abc'\n```\n\n## Steps to Reproduce\n1. Call `process_request` with string data\n2. Error occurs\n\n## Labels\n- bug\n- auto-triaged",
+    "state": "open",
+    "labels": ["bug", "auto-triaged"],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T14:20:00Z",
+    "author": "auto-triage-bot"
+  },
+  {
+    "number": 98,
+    "title": "ConnectionError when user service is unavailable",
+    "body": "## Summary\nThe application fails with ConnectionError when the user service API is unreachable.\n\n## Analysis\nThe HTTP client does not have proper retry logic for transient failures.",
+    "state": "closed",
+    "labels": ["bug", "network", "resolved"],
+    "created_at": "2024-01-10T08:15:00Z",
+    "updated_at": "2024-01-12T16:45:00Z",
+    "author": "developer1"
+  }
+]

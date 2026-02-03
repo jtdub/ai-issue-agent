@@ -1,0 +1,32 @@
+# Malicious inputs for security testing
+# Format: one input per line
+
+# Command injection attempts
+owner/repo; rm -rf /
+owner/repo$(whoami)
+owner/repo`id`
+owner/repo|cat /etc/passwd
+owner/repo&& echo pwned
+owner/repo|| echo pwned
+
+# Path traversal
+../../../etc/passwd
+owner/../../../etc/shadow
+./../../.git/config
+
+# Null byte injection
+owner/repo\x00.git
+owner\x00/repo
+
+# Newline injection
+owner/repo
+malicious-command
+
+# Shell metacharacters
+owner/repo$HOME
+owner/repo${PATH}
+owner/repo>(output.txt)
+owner/repo<(input.txt)
+
+# Unicode normalization attacks
+owner/repo\u202E\u0065\u0078\u0065

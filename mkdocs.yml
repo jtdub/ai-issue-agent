@@ -1,0 +1,89 @@
+site_name: AI Issue Agent
+site_description: Automation system that monitors chat platforms for Python tracebacks and automatically triages them as GitHub issues
+site_author: AI Issue Agent Contributors
+repo_url: https://github.com/jtdub/ai-issue-agent
+repo_name: jtdub/ai-issue-agent
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_root_heading: true
+            show_source: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+  - tables
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - Getting Started: user-guide/getting-started.md
+      - Installation: user-guide/installation.md
+      - Configuration: user-guide/configuration.md
+      - Usage: user-guide/usage.md
+      - Troubleshooting: user-guide/troubleshooting.md
+  - Administrator Guide:
+      - Overview: admin-guide/overview.md
+      - Deployment: admin-guide/deployment.md
+      - Monitoring: admin-guide/monitoring.md
+      - Security: admin-guide/security.md
+      - Performance Tuning: admin-guide/performance.md
+  - Developer Guide:
+      - Architecture: developer-guide/architecture.md
+      - Development Setup: developer-guide/setup.md
+      - Contributing: developer-guide/contributing.md
+      - Testing: developer-guide/testing.md
+      - API Reference: developer-guide/api-reference.md
+  - Reference:
+      - Security: reference/security.md
+      - Implementation Plan: reference/implementation-plan.md
+      - Changelog: reference/changelog.md
