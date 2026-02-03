@@ -71,6 +71,14 @@ dev = [
     "ipython>=8.19.0",
 ]
 
+docs = [
+    # Documentation
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
+    "pymdown-extensions>=10.7.0",
+]
+
 [project.scripts]
 ai-issue-agent = "ai_issue_agent.__main__:main"
 
