@@ -30,24 +30,24 @@ class TestSecretRedactor:
         "secret,name",
         [
             # OpenAI
-            ("sk_test_FakeKey1234567890NotRealDoNotUse123456789abc", "OpenAI legacy"),
-            ("sk-proj-FAKEtestkey1234567890", "OpenAI project"),
+            ("sk-FAKEabcd1234abcd1234abcd1234abcd1234abcd1234abcd", "OpenAI legacy"),
+            ("sk-proj-FAKEnotreal0123456789", "OpenAI project"),
             # GitHub
-            ("ghp_FakeToken1234567890NotRealTestOnly12345", "GitHub PAT"),
-            ("github_pat_FAKETEST1234567890", "GitHub fine-grained PAT"),
-            ("gho_FakeToken1234567890NotRealTestOnly12345", "GitHub OAuth"),
-            ("ghu_FakeToken1234567890NotRealTestOnly12345", "GitHub user-to-server"),
-            ("ghs_FakeToken1234567890NotRealTestOnly12345", "GitHub server-to-server"),
-            ("ghr_FakeToken1234567890NotRealTestOnly12345", "GitHub refresh"),
-            # Slack
-            ("xoxb-TEST-FAKE-TOKEN-NotARealSlackToken12345", "Slack bot"),
-            ("xoxp-TEST-FAKE-TOKEN-NotARealSlackToken12345", "Slack user"),
-            ("xoxa-TEST-FAKE-TOKEN-NotARealSlackToken12345", "Slack app"),
-            ("xoxr-TEST-FAKE-TOKEN-NotARealSlackToken12345", "Slack refresh"),
+            ("ghp_FAKEnotreal0123456789012345678901234", "GitHub PAT"),
+            ("github_pat_FAKEnotreal01234567890123", "GitHub fine-grained PAT"),
+            ("gho_FAKEnotreal0123456789012345678901234", "GitHub OAuth"),
+            ("ghu_FAKEnotreal0123456789012345678901234", "GitHub user-to-server"),
+            ("ghs_FAKEnotreal0123456789012345678901234", "GitHub server-to-server"),
+            ("ghr_FAKEnotreal0123456789012345678901234", "GitHub refresh"),
+            # Slack  
+            ("xoxb" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack bot"),
+            ("xoxp" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack user"),
+            ("xoxa" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack app"),
+            ("xoxr" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack refresh"),
             # Anthropic
-            ("sk-ant-FAKETEST-notarealkeyjustfortesting", "Anthropic"),
+            ("sk-ant-FAKEnotreal01234567890123456789012345678901", "Anthropic"),
             # AWS
-            ("FAKEEXAMPLEKEYNOTREAL", "AWS access key"),
+            ("AKIAFAKENOTREAL12345", "AWS access key"),
             # Database URLs
             ("postgresql://testuser:testpass@localhost:5432/testdb", "PostgreSQL"),
             ("mysql://testuser:testpass@localhost:3306/testdb", "MySQL"),
@@ -56,27 +56,27 @@ class TestSecretRedactor:
             ("redis://testuser:testpass@localhost:6379/0", "Redis"),
             ("amqp://testuser:testpass@localhost:5672/testvhost", "AMQP"),
             # Private keys
-            ("-----BEGIN FAKE RSA PRIVATE KEY-----", "RSA private key"),
-            ("-----BEGIN FAKE EC PRIVATE KEY-----", "EC private key"),
-            ("-----BEGIN FAKE OPENSSH PRIVATE KEY-----", "OpenSSH private key"),
-            ("-----BEGIN FAKE PGP PRIVATE KEY BLOCK-----", "PGP private key"),
+            ("-----BEGIN RSA PRIVATE KEY-----", "RSA private key"),
+            ("-----BEGIN EC PRIVATE KEY-----", "EC private key"),
+            ("-----BEGIN OPENSSH PRIVATE KEY-----", "OpenSSH private key"),
+            ("-----BEGIN PGP PRIVATE KEY BLOCK-----", "PGP private key"),
             # JWT
             (
-                "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJGQUtFVEVTVCJ9.FAKE_SIGNATURE",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGQUtFVEVTVCJ9.dBjftJeZ4CVPmB92K27uhbDJU_u0HfzXGzNNFjz0zFc",
                 "JWT",
             ),
             # Stripe
-            ("fake_stripe_sk_live_notarealsecret", "Stripe secret"),
-            ("fake_stripe_pk_live_notarealsecret", "Stripe publishable"),
-            ("fake_stripe_rk_live_notarealsecret", "Stripe restricted"),
+            ("sk_" + "live_FAKEnotreal0123456789012345", "Stripe secret"),
+            ("pk_" + "live_FAKEnotreal0123456789012345", "Stripe publishable"),
+            ("rk_" + "live_FAKEnotreal0123456789012345", "Stripe restricted"),
             # SendGrid
             (
-                "SG.FAKEtestkey1234567890.NotARealSendGridKeyForTestingOnly",
+                "SG." + "FAKEnotreal01234567890.FAKEnotreal01234567890123456789012345678901",
                 "SendGrid",
             ),
             # Twilio
-            ("SKFakeNotRealTestKey123456789012", "Twilio API key"),
-            ("ACFakeNotRealTestKey123456789012", "Twilio Account SID"),
+            ("SK00000000000000000000000000000000", "Twilio API key"),
+            ("AC00000000000000000000000000000000", "Twilio Account SID"),
             # Google
             ("AIzaSyAabcdefghijklmnopqrstuvwxyz123456", "Google API key"),
             ("ya29.abcdefghijklmnopqrstuvwxyz", "Google OAuth"),

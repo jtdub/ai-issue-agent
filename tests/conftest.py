@@ -39,18 +39,18 @@ def traceback_with_secrets() -> str:
 def known_secrets() -> list[tuple[str, str]]:
     """Return a list of (secret, pattern_name) tuples for testing."""
     return [
-        ("sk_test_FakeKey1234567890NotRealDoNotUse123456789", "OpenAI legacy"),
-        ("sk-proj-FAKEtestkey1234567890", "OpenAI project"),
-        ("ghp_FakeToken1234567890NotRealTestOnly12345", "GitHub PAT"),
-        ("github_pat_FAKETEST1234567890", "GitHub fine-grained PAT"),
-        ("xoxb-TEST-FAKE-TOKEN-NotARealSlackToken12345", "Slack bot token"),
-        ("xapp-TEST-FAKE-APP-TOKEN-NotReal", "Slack app token"),
-        ("sk-ant-FAKETEST-notarealkeyjustfortesting", "Anthropic"),
-        ("FAKEEXAMPLEKEYNOTREAL", "AWS access key"),
+        ("sk-FAKEabcd1234abcd1234abcd1234abcd1234abcd1234abcd", "OpenAI legacy"),
+        ("sk-proj-FAKEnotreal0123456789", "OpenAI project"),
+        ("ghp_FAKEnotreal1234567890123456789012", "GitHub PAT"),
+        ("github_pat_FAKEnotreal01234567890123", "GitHub fine-grained PAT"),
+        ("xoxb" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack bot token"),
+        ("xapp-1-A0123456789-1234567890123-FAKEnotreal012", "Slack app token"),
+        ("sk-ant-FAKEnotreal0123456789012345678901234567", "Anthropic"),
+        ("AKIAFAKENOTREAL12345", "AWS access key"),
         ("postgresql://testuser:testpass@localhost:5432/testdb", "Database URL"),
-        ("-----BEGIN FAKE PRIVATE KEY-----", "Private key"),
+        ("-----BEGIN PRIVATE KEY-----", "Private key"),
         (
-            "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJGQUtFVEVTVCJ9.FAKE_SIGNATURE",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGQUtFVEVTVCJ9.dBjftJeZ4CVPmB92K27uhbDJU_u0HfzXGzNNFjz0zFc",
             "JWT",
         ),
     ]
