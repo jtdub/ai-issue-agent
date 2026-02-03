@@ -39,7 +39,7 @@ class TestSecretRedactor:
             ("ghu_FAKEnotreal0123456789012345678901234", "GitHub user-to-server"),
             ("ghs_FAKEnotreal0123456789012345678901234", "GitHub server-to-server"),
             ("ghr_FAKEnotreal0123456789012345678901234", "GitHub refresh"),
-            # Slack  
+            # Slack
             ("xoxb" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack bot"),
             ("xoxp" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack user"),
             ("xoxa" + "-1234567890-1234567890-FAKEnotreal0123456789", "Slack app"),
