@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -69,19 +69,21 @@ class TestGitHubAdapterSearchIssues:
             adapter = GitHubAdapter(github_config)
 
             mock_result = CommandResult(
-                stdout=json.dumps([
-                    {
-                        "number": 1,
-                        "title": "Bug in parser",
-                        "body": "Parser fails on edge case",
-                        "url": "https://github.com/owner/repo/issues/1",
-                        "state": "OPEN",
-                        "labels": [{"name": "bug"}],
-                        "createdAt": "2024-01-15T10:00:00Z",
-                        "updatedAt": "2024-01-16T12:00:00Z",
-                        "author": {"login": "user1"},
-                    }
-                ]),
+                stdout=json.dumps(
+                    [
+                        {
+                            "number": 1,
+                            "title": "Bug in parser",
+                            "body": "Parser fails on edge case",
+                            "url": "https://github.com/owner/repo/issues/1",
+                            "state": "OPEN",
+                            "labels": [{"name": "bug"}],
+                            "createdAt": "2024-01-15T10:00:00Z",
+                            "updatedAt": "2024-01-16T12:00:00Z",
+                            "author": {"login": "user1"},
+                        }
+                    ]
+                ),
                 stderr="",
                 return_code=0,
                 command=["gh", "issue", "list"],
@@ -132,17 +134,19 @@ class TestGitHubAdapterGetIssue:
             adapter = GitHubAdapter(github_config)
 
             mock_result = CommandResult(
-                stdout=json.dumps({
-                    "number": 42,
-                    "title": "Test Issue",
-                    "body": "Issue body content",
-                    "url": "https://github.com/owner/repo/issues/42",
-                    "state": "OPEN",
-                    "labels": [{"name": "bug"}, {"name": "high-priority"}],
-                    "createdAt": "2024-01-15T10:00:00Z",
-                    "updatedAt": "2024-01-16T12:00:00Z",
-                    "author": {"login": "testuser"},
-                }),
+                stdout=json.dumps(
+                    {
+                        "number": 42,
+                        "title": "Test Issue",
+                        "body": "Issue body content",
+                        "url": "https://github.com/owner/repo/issues/42",
+                        "state": "OPEN",
+                        "labels": [{"name": "bug"}, {"name": "high-priority"}],
+                        "createdAt": "2024-01-15T10:00:00Z",
+                        "updatedAt": "2024-01-16T12:00:00Z",
+                        "author": {"login": "testuser"},
+                    }
+                ),
                 stderr="",
                 return_code=0,
                 command=["gh", "issue", "view"],
@@ -181,17 +185,19 @@ class TestGitHubAdapterGetIssue:
             adapter = GitHubAdapter(github_config)
 
             mock_result = CommandResult(
-                stdout=json.dumps({
-                    "number": 10,
-                    "title": "Closed Issue",
-                    "body": "This was fixed",
-                    "url": "https://github.com/owner/repo/issues/10",
-                    "state": "CLOSED",
-                    "labels": [],
-                    "createdAt": "2024-01-01T00:00:00Z",
-                    "updatedAt": "2024-01-10T00:00:00Z",
-                    "author": {"login": "user"},
-                }),
+                stdout=json.dumps(
+                    {
+                        "number": 10,
+                        "title": "Closed Issue",
+                        "body": "This was fixed",
+                        "url": "https://github.com/owner/repo/issues/10",
+                        "state": "CLOSED",
+                        "labels": [],
+                        "createdAt": "2024-01-01T00:00:00Z",
+                        "updatedAt": "2024-01-10T00:00:00Z",
+                        "author": {"login": "user"},
+                    }
+                ),
                 stderr="",
                 return_code=0,
                 command=["gh", "issue", "view"],
@@ -215,17 +221,19 @@ class TestGitHubAdapterCreateIssue:
             adapter = GitHubAdapter(github_config)
 
             mock_result = CommandResult(
-                stdout=json.dumps({
-                    "number": 100,
-                    "title": "New Bug Report",
-                    "body": "Description of the bug",
-                    "url": "https://github.com/owner/repo/issues/100",
-                    "state": "OPEN",
-                    "labels": [{"name": "auto-triaged"}],
-                    "createdAt": "2024-01-20T15:00:00Z",
-                    "updatedAt": "2024-01-20T15:00:00Z",
-                    "author": {"login": "bot"},
-                }),
+                stdout=json.dumps(
+                    {
+                        "number": 100,
+                        "title": "New Bug Report",
+                        "body": "Description of the bug",
+                        "url": "https://github.com/owner/repo/issues/100",
+                        "state": "OPEN",
+                        "labels": [{"name": "auto-triaged"}],
+                        "createdAt": "2024-01-20T15:00:00Z",
+                        "updatedAt": "2024-01-20T15:00:00Z",
+                        "author": {"login": "bot"},
+                    }
+                ),
                 stderr="",
                 return_code=0,
                 command=["gh", "issue", "create"],
