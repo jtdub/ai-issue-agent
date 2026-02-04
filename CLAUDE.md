@@ -20,25 +20,39 @@ AI Issue Agent is an automation system that monitors chat platforms (Slack) for 
 
 ## Commands
 
-Once implemented, the planned commands are:
+The project uses **Poetry** for dependency management:
 
 ```bash
+# Install dependencies
+poetry install                  # Core dependencies only
+poetry install --with dev       # Include development dependencies
+poetry install --with docs      # Include documentation dependencies
+
 # Run the agent
-python -m ai_issue_agent
+poetry run ai-issue-agent
+# or
+poetry shell
+ai-issue-agent
 
 # Run tests
-pytest                          # All tests
-pytest tests/unit               # Unit tests only
-pytest tests/integration        # Integration tests only
-pytest -k "test_name"           # Single test by name
+poetry run pytest                          # All tests
+poetry run pytest tests/unit               # Unit tests only
+poetry run pytest tests/integration        # Integration tests only
+poetry run pytest -k "test_name"           # Single test by name
+
+# Run tests with coverage
+poetry run pytest --cov=src/ai_issue_agent --cov-report=html
 
 # Type checking
-mypy
+poetry run mypy src/ai_issue_agent
 
 # Lint and format
-ruff check                      # Lint
-ruff format                     # Format
-ruff check --fix                # Auto-fix lint issues
+poetry run ruff check                      # Lint
+poetry run ruff format                     # Format
+poetry run ruff check --fix                # Auto-fix lint issues
+
+# Security scanning
+poetry run pip-audit
 ```
 
 ## Architecture
