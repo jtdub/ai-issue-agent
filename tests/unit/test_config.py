@@ -17,7 +17,6 @@ from ai_issue_agent.config.schema import (
     LLMConfig,
     MatchingConfig,
     OllamaConfig,
-    OpenAIConfig,
     SlackConfig,
     VCSConfig,
 )
@@ -333,7 +332,7 @@ llm:
                 assert config.vcs.github.default_repo == "owner/repo"
                 assert config.llm.provider == "anthropic"
             finally:
-                os.unlink(f.name)
+                Path(f.name).unlink()
                 del os.environ["TEST_SLACK_BOT_TOKEN"]
                 del os.environ["TEST_SLACK_APP_TOKEN"]
                 del os.environ["TEST_ANTHROPIC_KEY"]
@@ -361,7 +360,7 @@ chat:
                 with pytest.raises(ValueError, match="Environment variable MISSING_VAR not found"):
                     load_config(Path(f.name))
             finally:
-                os.unlink(f.name)
+                Path(f.name).unlink()
 
 
 class TestValidateConfig:

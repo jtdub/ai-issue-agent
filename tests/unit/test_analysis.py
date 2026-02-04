@@ -141,7 +141,10 @@ class TestErrorAnalysis:
 
         analysis = ErrorAnalysis(
             root_cause="Attempting to convert non-numeric string to integer",
-            explanation="The code calls int() on a string that may contain non-numeric characters, causing a ValueError.",
+            explanation=(
+                "The code calls int() on a string that may contain "
+                "non-numeric characters, causing a ValueError."
+            ),
             suggested_fixes=(fix1, fix2),
             related_documentation=(
                 "https://docs.python.org/3/library/functions.html#int",

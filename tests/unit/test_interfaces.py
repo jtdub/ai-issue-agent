@@ -1,15 +1,13 @@
 """Tests for protocol interfaces."""
 
+from collections.abc import AsyncIterator
 from datetime import datetime
 from pathlib import Path
-from typing import Any, AsyncIterator
+from typing import Any
 
 import pytest
 
-from ai_issue_agent.interfaces.chat import ChatProvider
-from ai_issue_agent.interfaces.llm import LLMProvider
-from ai_issue_agent.interfaces.vcs import VCSProvider
-from ai_issue_agent.models.analysis import CodeContext, ErrorAnalysis, SuggestedFix
+from ai_issue_agent.models.analysis import CodeContext, ErrorAnalysis
 from ai_issue_agent.models.issue import Issue, IssueCreate, IssueSearchResult, IssueState
 from ai_issue_agent.models.message import ChatMessage
 from ai_issue_agent.models.traceback import ParsedTraceback, StackFrame
@@ -329,7 +327,7 @@ class TestVCSProviderProtocol:
     async def test_vcs_provider_clone_repository(self):
         """Test clone_repository method."""
         provider = MockVCSProvider()
-        dest = Path("/tmp/repos")
+        dest = Path("/tmp/repos")  # noqa: S108
         result = await provider.clone_repository(
             repo="owner/repo",
             destination=dest,

@@ -179,9 +179,6 @@ class TestProcessingResult:
         """Test using ProcessingResult in conditional logic."""
         result = ProcessingResult.NO_TRACEBACK
 
-        if result == ProcessingResult.NO_TRACEBACK:
-            processed = True
-        else:
-            processed = False
+        processed = result == ProcessingResult.NO_TRACEBACK
 
         assert processed
