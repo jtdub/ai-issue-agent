@@ -40,10 +40,10 @@ git checkout -b fix/bug-description
 
 ```bash
 # Run all tests
-pytest
+poetry run pytest
 
 # Run with coverage
-pytest --cov=src/ai_issue_agent --cov-report=term-missing
+poetry run pytest --cov=src/ai_issue_agent --cov-report=term-missing
 
 # Ensure > 90% coverage
 ```
@@ -52,16 +52,16 @@ pytest --cov=src/ai_issue_agent --cov-report=term-missing
 
 ```bash
 # Format code
-ruff format .
+poetry run ruff format .
 
 # Check for issues
-ruff check .
+poetry run ruff check .
 
 # Type checking
-mypy src/
+poetry run mypy src/ai_issue_agent
 
 # Pre-commit hooks run all checks
-pre-commit run --all-files
+poetry run pre-commit run --all-files
 ```
 
 ### 6. Commit Changes

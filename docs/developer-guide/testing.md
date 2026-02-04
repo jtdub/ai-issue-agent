@@ -17,25 +17,31 @@ tests/
 
 ```bash
 # All tests
-pytest
+poetry run pytest
+
+# Unit tests only
+poetry run pytest tests/unit
 
 # Specific test file
-pytest tests/unit/test_security.py
+poetry run pytest tests/unit/test_security.py
 
 # Specific test
-pytest tests/unit/test_security.py::TestSecretRedactor::test_redacts_known_secrets
+poetry run pytest tests/unit/test_security.py::TestSecretRedactor::test_redacts_known_secrets
 
 # With coverage
-pytest --cov=src/ai_issue_agent --cov-report=html
+poetry run pytest --cov=src/ai_issue_agent --cov-report=html
 
 # Verbose output
-pytest -v
+poetry run pytest -v
 
 # Stop on first failure
-pytest -x
+poetry run pytest -x
 
 # Run only failed tests
-pytest --lf
+poetry run pytest --lf
+
+# Skip slow/integration tests
+poetry run pytest -m "not slow and not integration"
 ```
 
 ## Writing Unit Tests

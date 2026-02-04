@@ -87,63 +87,142 @@ async with limiter:
 
 ```
 ai_issue_agent/
-├── core/              # Core processing logic (TBD)
-├── adapters/          # Platform integrations (TBD)
-│   ├── chat/         # Slack, Discord, etc.
-│   ├── vcs/          # GitHub, GitLab, etc.
-│   └── llm/          # OpenAI, Anthropic, Ollama
-├── interfaces/        # Abstract protocols (TBD)
-├── models/            # Data models (TBD)
-├── utils/             # Utilities (implemented)
-│   ├── security.py
-│   ├── safe_subprocess.py
-│   └── async_helpers.py
-└── config/            # Configuration (TBD)
+├── core/              # Core processing logic
+│   └── traceback_parser.py  # Python traceback parsing
+├── adapters/          # Platform integrations
+│   ├── chat/         # Chat platform adapters
+│   │   └── slack.py  # Slack via slack-bolt
+│   ├── vcs/          # Version control adapters
+│   │   └── github.py # GitHub via gh CLI
+│   └── llm/          # LLM provider adapters
+│       └── anthropic.py  # Anthropic Claude
+├── interfaces/        # Abstract protocols
+│   ├── chat.py       # ChatProvider protocol
+│   ├── vcs.py        # VCSProvider protocol
+│   └── llm.py        # LLMProvider protocol
+├── models/            # Data models
+│   ├── traceback.py  # StackFrame, ParsedTraceback
+│   ├── issue.py      # Issue, IssueCreate, IssueMatch
+│   ├── message.py    # ChatMessage, ChatReply
+│   └── analysis.py   # ErrorAnalysis, SuggestedFix
+├── config/            # Configuration
+│   ├── schema.py     # Pydantic configuration models
+│   └── loader.py     # YAML + env var loading
+└── utils/             # Utilities
+    ├── security.py       # SecretRedactor, input validation
+    ├── safe_subprocess.py  # SafeGHCli wrapper
+    └── async_helpers.py  # Retry, rate limiting, timeout
 ```
 
-## Protocols (Planned)
+## Protocols
 
 ### ChatProvider
 
 ```python
+from typing import Protocol, AsyncIterator
+from ai_issue_agent.models.message import ChatMessage
+
 class ChatProvider(Protocol):
     async def connect(self) -> None: ...
-    async def listen(self) -> AsyncIterator[Message]: ...
-    async def send_message(self, channel: str, text: str) -> str: ...
+    async def disconnect(self) -> None: ...
+    async def listen(self) -> AsyncIterator[ChatMessage]: ...
+    async def send_reply(
+        self, channel_id: str, text: str, 
+        thread_id: str | None = None, 
+        blocks: list[dict] | None = None
+    ) -> str: ...
+    async def add_reaction(self, channel_id: str, message_id: str, reaction: str) -> None: ...
+    async def remove_reaction(self, channel_id: str, message_id: str, reaction: str) -> None: ...
 ```
 
 ### VCSProvider
 
 ```python
+from typing import Protocol
+from pathlib import Path
+from ai_issue_agent.models.issue import Issue, IssueCreate, IssueSearchResult
+
 class VCSProvider(Protocol):
-    async def create_issue(self, repo: str, issue: Issue) -> IssueResult: ...
-    async def search_issues(self, repo: str, query: str) -> List[Issue]: ...
-    async def add_comment(self, issue_url: str, comment: str) -> None: ...
+    async def search_issues(self, repo: str, query: str, state: str = "all", max_results: int = 10) -> list[IssueSearchResult]: ...
+    async def get_issue(self, repo: str, issue_number: int) -> Issue | None: ...
+    async def create_issue(self, repo: str, issue: IssueCreate) -> Issue: ...
+    async def clone_repository(self, repo: str, destination: Path, branch: str | None = None, shallow: bool = True) -> Path: ...
+    async def get_file_content(self, repo: str, file_path: str, ref: str | None = None) -> str | None: ...
+    async def get_default_branch(self, repo: str) -> str: ...
 ```
 
 ### LLMProvider
 
 ```python
+from typing import Protocol
+from ai_issue_agent.models.traceback import ParsedTraceback
+from ai_issue_agent.models.analysis import CodeContext, ErrorAnalysis
+from ai_issue_agent.models.issue import Issue
+
 class LLMProvider(Protocol):
-    async def analyze_traceback(self, traceback: str) -> Analysis: ...
-    async def suggest_fix(self, traceback: str, context: str) -> str: ...
+    async def analyze_error(self, traceback: ParsedTraceback, code_context: list[CodeContext], additional_context: str | None = None) -> ErrorAnalysis: ...
+    async def generate_issue_body(self, traceback: ParsedTraceback, analysis: ErrorAnalysis, code_context: list[CodeContext]) -> str: ...
+    async def generate_issue_title(self, traceback: ParsedTraceback, analysis: ErrorAnalysis) -> str: ...
+    async def calculate_similarity(self, traceback: ParsedTraceback, existing_issues: list[Issue]) -> list[tuple[Issue, float]]: ...
+    
+    @property
+    def model_name(self) -> str: ...
+    
+    @property
+    def max_context_tokens(self) -> int: ...
+```
+
+## Data Models
+
+### Traceback Models
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class StackFrame:
+    file_path: str
+    line_number: int
+    function_name: str
+    code_line: str | None = None
+    
+    @property
+    def is_stdlib(self) -> bool: ...
+    @property
+    def is_site_packages(self) -> bool: ...
+    @property
+    def normalized_path(self) -> str: ...
+
+@dataclass(frozen=True)
+class ParsedTraceback:
+    exception_type: str
+    exception_message: str
+    frames: tuple[StackFrame, ...]
+    raw_text: str
+    is_chained: bool = False
+    cause: "ParsedTraceback | None" = None
+    
+    @property
+    def innermost_frame(self) -> StackFrame: ...
+    @property
+    def project_frames(self) -> tuple[StackFrame, ...]: ...
+    @property
+    def signature(self) -> str: ...
 ```
 
 ## Full API Documentation
-
-Full API documentation with all methods, parameters, and examples will be available once the core modules are implemented.
 
 To generate API docs from code:
 
 ```bash
 # Install with docs dependencies
-pip install -e ".[docs]"
+poetry install --with docs
 
 # Build and serve documentation
-mkdocs serve
+poetry run mkdocs serve
 
 # Build static site
-mkdocs build
+poetry run mkdocs build
 ```
 
 The API reference will be automatically generated from docstrings using `mkdocstrings[python]`.

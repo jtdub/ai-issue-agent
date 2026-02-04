@@ -18,18 +18,33 @@ cd ai-issue-agent
 
 ## Install Dependencies
 
-```bash
-# Create virtual environment
-python3.11 -m venv venv
-source venv/bin/activate  # Linux/macOS
-# or: venv\Scripts\activate  # Windows
+The project uses [Poetry](https://python-poetry.org/) for dependency management.
 
-# Install in editable mode with dev dependencies
-pip install -e ".[dev,docs]"
+=== "Poetry (Recommended)"
+    ```bash
+    # Install Poetry if not already installed
+    curl -sSL https://install.python-poetry.org | python3 -
+    
+    # Install dependencies
+    poetry install --with dev,docs
+    
+    # Install pre-commit hooks
+    poetry run pre-commit install
+    ```
 
-# Install pre-commit hooks
-pre-commit install
-```
+=== "pip (Alternative)"
+    ```bash
+    # Create virtual environment
+    python3.11 -m venv venv
+    source venv/bin/activate  # Linux/macOS
+    # or: venv\Scripts\activate  # Windows
+    
+    # Install in editable mode with dev dependencies
+    pip install -e ".[dev,docs]"
+    
+    # Install pre-commit hooks
+    pre-commit install
+    ```
 
 ## Configuration
 
@@ -58,45 +73,51 @@ source .env
 
 ```bash
 # All tests
-pytest
+poetry run pytest
 
 # With coverage
-pytest --cov=src/ai_issue_agent --cov-report=html
+poetry run pytest --cov=src/ai_issue_agent --cov-report=html
 
 # Specific test
-pytest tests/unit/test_security.py -v
+poetry run pytest tests/unit/test_security.py -v
+
+# Run only unit tests
+poetry run pytest tests/unit
 
 # Watch mode (requires pytest-watch)
-ptw
+poetry run ptw
 ```
 
 ## Code Quality
 
 ```bash
 # Linting
-ruff check .
+poetry run ruff check .
 
 # Formatting
-ruff format .
+poetry run ruff format .
 
 # Type checking
-mypy src/
+poetry run mypy src/ai_issue_agent
 
 # Security scanning
-bandit -r src/
+poetry run pip-audit
 
 # All checks (runs in pre-commit)
-pre-commit run --all-files
+poetry run pre-commit run --all-files
 ```
 
 ## Running the Agent
 
 ```bash
 # Development mode
-python -m ai_issue_agent --config config/config.dev.yaml
+poetry run ai-issue-agent --config config/config.dev.yaml
 
 # With debug logging
-python -m ai_issue_agent --config config/config.dev.yaml --log-level DEBUG
+poetry run ai-issue-agent --config config/config.dev.yaml --log-level DEBUG
+
+# Or using Python module syntax
+poetry run python -m ai_issue_agent --config config/config.dev.yaml
 ```
 
 ## IDE Setup

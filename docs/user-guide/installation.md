@@ -59,14 +59,17 @@ If you're planning to contribute or modify the code:
 git clone https://github.com/jtdub/ai-issue-agent.git
 cd ai-issue-agent
 
+# Install Poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3 -
+
 # Install with development dependencies
-pip install -e ".[dev]"
+poetry install --with dev
 
 # Install pre-commit hooks
-pre-commit install
+poetry run pre-commit install
 
 # Run tests to verify setup
-pytest
+poetry run pytest
 ```
 
 ## Platform-Specific Instructions

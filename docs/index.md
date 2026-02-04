@@ -62,6 +62,13 @@ Built on asyncio with rate limiting, retry logic, and efficient resource managem
 
 ## Quick Start
 
+=== "Poetry (Recommended)"
+    ```bash
+    git clone https://github.com/jtdub/ai-issue-agent.git
+    cd ai-issue-agent
+    poetry install
+    ```
+
 === "pip"
     ```bash
     pip install ai-issue-agent
@@ -91,6 +98,8 @@ export OPENAI_API_KEY="sk-..."
 Run the agent:
 
 ```bash
+poetry run ai-issue-agent --config config.yaml
+# Or if installed with pip:
 ai-issue-agent --config config.yaml
 ```
 
