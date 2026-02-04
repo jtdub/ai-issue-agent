@@ -8,7 +8,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from ai_issue_agent.config.schema import SlackConfig
-from ai_issue_agent.models.message import ChatMessage
 
 
 @pytest.fixture
@@ -275,9 +274,7 @@ class TestSlackAdapterMessageProcessing:
 class TestSlackAdapterUserLookup:
     """Test user name lookup in SlackAdapter."""
 
-    async def test_get_user_name_returns_display_name(
-        self, slack_config: SlackConfig
-    ) -> None:
+    async def test_get_user_name_returns_display_name(self, slack_config: SlackConfig) -> None:
         """Test getting user display name."""
         with patch("ai_issue_agent.adapters.chat.slack.AsyncApp") as mock_app_class:
             from ai_issue_agent.adapters.chat.slack import SlackAdapter
@@ -301,9 +298,7 @@ class TestSlackAdapterUserLookup:
 
             assert name == "John Doe"
 
-    async def test_get_user_name_empty_id_returns_unknown(
-        self, slack_config: SlackConfig
-    ) -> None:
+    async def test_get_user_name_empty_id_returns_unknown(self, slack_config: SlackConfig) -> None:
         """Test that empty user ID returns 'unknown'."""
         with patch("ai_issue_agent.adapters.chat.slack.AsyncApp") as mock_app_class:
             from ai_issue_agent.adapters.chat.slack import SlackAdapter
@@ -317,9 +312,7 @@ class TestSlackAdapterUserLookup:
 
             assert name == "unknown"
 
-    async def test_get_user_name_api_error_returns_user_id(
-        self, slack_config: SlackConfig
-    ) -> None:
+    async def test_get_user_name_api_error_returns_user_id(self, slack_config: SlackConfig) -> None:
         """Test that API error returns user ID as fallback."""
         with patch("ai_issue_agent.adapters.chat.slack.AsyncApp") as mock_app_class:
             from slack_sdk.errors import SlackApiError
@@ -329,7 +322,7 @@ class TestSlackAdapterUserLookup:
             mock_app = MagicMock()
             mock_client = MagicMock()
             mock_client.users_info = AsyncMock(
-                side_effect=SlackApiError("error", {"error": "user_not_found"})
+                side_effect=SlackApiError("error", {"error": "user_not_found"})  # type: ignore[no-untyped-call]
             )
             mock_app.client = mock_client
             mock_app_class.return_value = mock_app
@@ -458,9 +451,7 @@ class TestSlackAdapterDisconnect:
 class TestSlackAdapterListen:
     """Test message listening functionality."""
 
-    async def test_listen_raises_when_not_connected(
-        self, slack_config: SlackConfig
-    ) -> None:
+    async def test_listen_raises_when_not_connected(self, slack_config: SlackConfig) -> None:
         """Test that listen raises error when not connected."""
         with patch("ai_issue_agent.adapters.chat.slack.AsyncApp") as mock_app_class:
             from ai_issue_agent.adapters.chat.slack import SlackAdapter, SlackAdapterError
@@ -499,9 +490,7 @@ class TestSlackAdapterChannelResolution:
             # Should have empty set (monitor all channels)
             assert adapter._monitored_channel_ids == set()
 
-    async def test_resolve_channel_ids_with_channels(
-        self, slack_config: SlackConfig
-    ) -> None:
+    async def test_resolve_channel_ids_with_channels(self, slack_config: SlackConfig) -> None:
         """Test channel resolution with configured channels."""
         with patch("ai_issue_agent.adapters.chat.slack.AsyncApp") as mock_app_class:
             from ai_issue_agent.adapters.chat.slack import SlackAdapter

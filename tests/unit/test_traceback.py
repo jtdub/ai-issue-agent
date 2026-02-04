@@ -82,9 +82,9 @@ class TestStackFrame:
 
         for original, expected in test_cases:
             frame = StackFrame(original, 1, "foo")
-            assert frame.normalized_path == expected, (
-                f"Expected {expected}, got {frame.normalized_path}"
-            )
+            assert (
+                frame.normalized_path == expected
+            ), f"Expected {expected}, got {frame.normalized_path}"
 
     def test_frozen_immutable(self) -> None:
         """Test that StackFrame is frozen (immutable)."""

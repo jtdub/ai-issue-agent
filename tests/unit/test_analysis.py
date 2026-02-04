@@ -55,9 +55,9 @@ class TestCodeContext:
                 end_line=end,
                 content="",
             )
-            assert context.line_count == expected_count, (
-                f"Expected {expected_count} for lines {start}-{end}"
-            )
+            assert (
+                context.line_count == expected_count
+            ), f"Expected {expected_count} for lines {start}-{end}"
 
     def test_frozen_immutable(self) -> None:
         """Test that CodeContext is frozen (immutable)."""

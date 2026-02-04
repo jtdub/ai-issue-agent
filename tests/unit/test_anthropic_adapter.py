@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from ai_issue_agent.config.schema import AnthropicConfig
-from ai_issue_agent.models.analysis import CodeContext
+from ai_issue_agent.models.analysis import CodeContext, ErrorAnalysis
 from ai_issue_agent.models.traceback import ParsedTraceback, StackFrame
 
 
@@ -82,7 +82,7 @@ class TestAnthropicAdapterSecretRedaction:
 
             adapter = AnthropicAdapter(anthropic_config)
 
-            raw_text = 'token: ghp_FAKEnotreal0123456789012345678901234'
+            raw_text = "token: ghp_FAKEnotreal0123456789012345678901234"
 
             redacted = adapter._redact_text(raw_text)
 
@@ -152,7 +152,9 @@ class TestAnthropicAdapterFormatting:
 
             formatted = adapter._format_code_context([])
 
-            assert formatted == "" or "No code context" in formatted.lower() or formatted is not None
+            assert (
+                formatted == "" or "No code context" in formatted.lower() or formatted is not None
+            )
 
 
 class TestAnthropicAdapterSimilarityEmptyCase:
@@ -371,10 +373,8 @@ class TestAnthropicAdapterGenerateIssueBody:
         )
 
     @pytest.fixture
-    def sample_analysis(self) -> "ErrorAnalysis":  # noqa: F821
+    def sample_analysis(self) -> ErrorAnalysis:
         """Create a sample analysis for testing."""
-        from ai_issue_agent.models.analysis import ErrorAnalysis
-
         return ErrorAnalysis(
             root_cause="Missing key in dictionary",
             explanation="The key 'missing_key' does not exist in the dict.",
@@ -388,7 +388,7 @@ class TestAnthropicAdapterGenerateIssueBody:
         self,
         anthropic_config: AnthropicConfig,
         sample_traceback: ParsedTraceback,
-        sample_analysis: "ErrorAnalysis",  # noqa: F821
+        sample_analysis: ErrorAnalysis,
     ) -> None:
         """Test successful issue body generation."""
         with patch("ai_issue_agent.adapters.llm.anthropic.anthropic.Anthropic") as mock_anthropic:
@@ -437,10 +437,8 @@ class TestAnthropicAdapterGenerateIssueTitle:
         )
 
     @pytest.fixture
-    def sample_analysis(self) -> "ErrorAnalysis":  # noqa: F821
+    def sample_analysis(self) -> ErrorAnalysis:
         """Create a sample analysis for testing."""
-        from ai_issue_agent.models.analysis import ErrorAnalysis
-
         return ErrorAnalysis(
             root_cause="Empty list accessed with invalid index",
             explanation="Attempting to access an index that does not exist.",
@@ -454,7 +452,7 @@ class TestAnthropicAdapterGenerateIssueTitle:
         self,
         anthropic_config: AnthropicConfig,
         sample_traceback: ParsedTraceback,
-        sample_analysis: "ErrorAnalysis",  # noqa: F821
+        sample_analysis: ErrorAnalysis,
     ) -> None:
         """Test successful issue title generation."""
         with patch("ai_issue_agent.adapters.llm.anthropic.anthropic.Anthropic") as mock_anthropic:
@@ -511,9 +509,7 @@ class TestAnthropicAdapterJsonParsing:
             assert result.root_cause == "test"
             assert result.confidence == 0.5
 
-    def test_parse_and_validate_json_with_markdown(
-        self, anthropic_config: AnthropicConfig
-    ) -> None:
+    def test_parse_and_validate_json_with_markdown(self, anthropic_config: AnthropicConfig) -> None:
         """Test parsing JSON wrapped in markdown code blocks."""
         with patch("ai_issue_agent.adapters.llm.anthropic.anthropic.Anthropic"):
             from ai_issue_agent.adapters.llm.anthropic import (

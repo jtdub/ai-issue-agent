@@ -86,7 +86,7 @@ class TestGitHubAdapterSearchIssues:
                 return_code=0,
                 command=["gh", "issue", "list"],
             )
-            adapter._gh.search_issues = AsyncMock(return_value=mock_result)
+            adapter._gh.search_issues = AsyncMock(return_value=mock_result)  # type: ignore[method-assign]
 
             results = await adapter.search_issues(
                 repo="owner/repo",
@@ -111,7 +111,7 @@ class TestGitHubAdapterSearchIssues:
                 return_code=0,
                 command=["gh", "issue", "list"],
             )
-            adapter._gh.search_issues = AsyncMock(return_value=mock_result)
+            adapter._gh.search_issues = AsyncMock(return_value=mock_result)  # type: ignore[method-assign]
 
             results = await adapter.search_issues(
                 repo="owner/repo",
@@ -147,7 +147,7 @@ class TestGitHubAdapterGetIssue:
                 return_code=0,
                 command=["gh", "issue", "view"],
             )
-            adapter._gh.get_issue = AsyncMock(return_value=mock_result)
+            adapter._gh.get_issue = AsyncMock(return_value=mock_result)  # type: ignore[method-assign]
 
             issue = await adapter.get_issue(repo="owner/repo", issue_number=42)
 
@@ -167,7 +167,7 @@ class TestGitHubAdapterGetIssue:
             adapter = GitHubAdapter(github_config)
 
             # The adapter catches NotFoundError and returns None
-            adapter._gh.get_issue = AsyncMock(side_effect=NotFoundError("Issue not found"))
+            adapter._gh.get_issue = AsyncMock(side_effect=NotFoundError("Issue not found"))  # type: ignore[method-assign]
 
             issue = await adapter.get_issue(repo="owner/repo", issue_number=9999)
 
@@ -196,7 +196,7 @@ class TestGitHubAdapterGetIssue:
                 return_code=0,
                 command=["gh", "issue", "view"],
             )
-            adapter._gh.get_issue = AsyncMock(return_value=mock_result)
+            adapter._gh.get_issue = AsyncMock(return_value=mock_result)  # type: ignore[method-assign]
 
             issue = await adapter.get_issue(repo="owner/repo", issue_number=10)
 
@@ -230,7 +230,7 @@ class TestGitHubAdapterCreateIssue:
                 return_code=0,
                 command=["gh", "issue", "create"],
             )
-            adapter._gh.create_issue = AsyncMock(return_value=mock_result)
+            adapter._gh.create_issue = AsyncMock(return_value=mock_result)  # type: ignore[method-assign]
 
             issue_create = IssueCreate(
                 title="New Bug Report",
@@ -260,7 +260,7 @@ class TestGitHubAdapterCloneRepository:
 
             expected_path = tmp_path / "repo"
             # SafeGHCli.clone_repository returns a Path directly
-            adapter._gh.clone_repository = AsyncMock(return_value=expected_path)
+            adapter._gh.clone_repository = AsyncMock(return_value=expected_path)  # type: ignore[method-assign]
 
             result = await adapter.clone_repository(
                 repo="owner/repo",
@@ -284,7 +284,7 @@ class TestGitHubAdapterGetFileContent:
 
             expected_content = "def hello():\n    print('Hello, World!')\n"
             # SafeGHCli.get_file_content returns string directly
-            adapter._gh.get_file_content = AsyncMock(return_value=expected_content)
+            adapter._gh.get_file_content = AsyncMock(return_value=expected_content)  # type: ignore[method-assign]
 
             content = await adapter.get_file_content(
                 repo="owner/repo",
@@ -303,7 +303,7 @@ class TestGitHubAdapterGetFileContent:
             adapter = GitHubAdapter(github_config)
 
             # The adapter catches NotFoundError and returns None
-            adapter._gh.get_file_content = AsyncMock(side_effect=NotFoundError("File not found"))
+            adapter._gh.get_file_content = AsyncMock(side_effect=NotFoundError("File not found"))  # type: ignore[method-assign]
 
             content = await adapter.get_file_content(
                 repo="owner/repo",
@@ -324,7 +324,7 @@ class TestGitHubAdapterGetDefaultBranch:
             adapter = GitHubAdapter(github_config)
 
             # SafeGHCli.get_default_branch returns string directly
-            adapter._gh.get_default_branch = AsyncMock(return_value="main")
+            adapter._gh.get_default_branch = AsyncMock(return_value="main")  # type: ignore[method-assign]
 
             branch = await adapter.get_default_branch(repo="owner/repo")
 
