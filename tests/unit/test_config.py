@@ -114,9 +114,7 @@ class TestGitHubConfig:
         ]
 
         for repo in invalid_repos:
-            with pytest.raises(
-                ValidationError, match="Invalid repository format"
-            ):
+            with pytest.raises(ValidationError, match="Invalid repository format"):
                 GitHubConfig(default_repo=repo)
 
     def test_allowed_repos_with_wildcard(self):

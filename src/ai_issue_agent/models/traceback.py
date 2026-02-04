@@ -82,9 +82,7 @@ class ParsedTraceback:
     def project_frames(self) -> tuple[StackFrame, ...]:
         """Frames from project code (not stdlib/site-packages)."""
         return tuple(
-            frame
-            for frame in self.frames
-            if not frame.is_stdlib and not frame.is_site_packages
+            frame for frame in self.frames if not frame.is_stdlib and not frame.is_site_packages
         )
 
     @property

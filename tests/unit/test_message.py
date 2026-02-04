@@ -152,9 +152,7 @@ class TestProcessingResult:
     def test_processing_result_values(self):
         """Test ProcessingResult enum values."""
         assert ProcessingResult.NO_TRACEBACK.value == "no_traceback"
-        assert (
-            ProcessingResult.EXISTING_ISSUE_LINKED.value == "existing_issue_linked"
-        )
+        assert ProcessingResult.EXISTING_ISSUE_LINKED.value == "existing_issue_linked"
         assert ProcessingResult.NEW_ISSUE_CREATED.value == "new_issue_created"
         assert ProcessingResult.ERROR.value == "error"
 

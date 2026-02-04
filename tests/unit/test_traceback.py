@@ -63,9 +63,7 @@ class TestStackFrame:
         ]
 
         for frame in frames:
-            assert (
-                frame.is_site_packages
-            ), f"Expected {frame.file_path} to be site-packages"
+            assert frame.is_site_packages, f"Expected {frame.file_path} to be site-packages"
 
     def test_is_site_packages_false_for_project_code(self):
         """Test is_site_packages returns False for project code."""
@@ -180,9 +178,7 @@ class TestParsedTraceback:
             StackFrame("/app/main.py", 10, "main"),  # project
             StackFrame("/usr/lib/python3.11/asyncio/events.py", 20, "run"),  # stdlib
             StackFrame("/app/utils.py", 30, "helper"),  # project
-            StackFrame(
-                "/usr/lib/python3.11/site-packages/requests/api.py", 40, "get"
-            ),  # 3rd party
+            StackFrame("/usr/lib/python3.11/site-packages/requests/api.py", 40, "get"),  # 3rd party
             StackFrame("/app/db.py", 50, "query"),  # project
         )
 
@@ -203,9 +199,7 @@ class TestParsedTraceback:
         """Test project_frames returns empty tuple if all frames are stdlib."""
         frames = (
             StackFrame("/usr/lib/python3.11/asyncio/events.py", 20, "run"),
-            StackFrame(
-                "/usr/lib/python3.11/site-packages/requests/api.py", 40, "get"
-            ),
+            StackFrame("/usr/lib/python3.11/site-packages/requests/api.py", 40, "get"),
         )
 
         tb = ParsedTraceback(

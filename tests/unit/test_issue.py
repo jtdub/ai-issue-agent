@@ -184,9 +184,7 @@ class TestIssueSearchResult:
             author="user",
         )
 
-        result = IssueSearchResult(
-            issue=issue, relevance_score=0.5, matched_terms=()
-        )
+        result = IssueSearchResult(issue=issue, relevance_score=0.5, matched_terms=())
 
         with pytest.raises(AttributeError):
             result.relevance_score = 0.9  # type: ignore
