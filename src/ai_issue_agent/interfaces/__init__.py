@@ -4,4 +4,4 @@ from .chat import ChatProvider
 from .llm import LLMProvider
 from .vcs import VCSProvider
 
-__all__ = ["ChatProvider", "VCSProvider", "LLMProvider"]
+__all__ = ["ChatProvider", "LLMProvider", "VCSProvider"]

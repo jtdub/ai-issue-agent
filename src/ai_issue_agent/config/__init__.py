@@ -16,20 +16,16 @@ from .schema import (
 )
 
 __all__ = [
-    # Loader
-    "load_config",
-    # Root config
     "AgentConfig",
-    # Top-level configs
+    "AnalysisConfig",
+    "AnthropicConfig",
     "ChatConfig",
-    "VCSConfig",
+    "GitHubConfig",
     "LLMConfig",
     "MatchingConfig",
-    "AnalysisConfig",
-    # Provider-specific configs
-    "SlackConfig",
-    "GitHubConfig",
-    "OpenAIConfig",
-    "AnthropicConfig",
     "OllamaConfig",
+    "OpenAIConfig",
+    "SlackConfig",
+    "VCSConfig",
+    "load_config",
 ]
