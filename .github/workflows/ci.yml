@@ -28,7 +28,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run ruff check
         run: poetry run ruff check .
@@ -57,7 +57,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run pip-audit
         run: poetry run pip-audit --skip-editable || true
@@ -83,7 +83,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run unit tests with coverage
         run: poetry run pytest tests/unit --cov=src/ai_issue_agent --cov-report=xml --cov-report=term-missing
@@ -115,7 +115,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run integration tests
         run: poetry run pytest tests/integration --cov=src/ai_issue_agent --cov-report=xml --cov-append -v
@@ -150,7 +150,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run E2E tests
         run: poetry run pytest tests/e2e -v
@@ -179,7 +179,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install -E dev
 
       - name: Run tests
         run: poetry run pytest tests/unit -q
