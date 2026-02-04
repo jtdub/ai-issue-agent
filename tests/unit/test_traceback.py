@@ -8,7 +8,7 @@ from ai_issue_agent.models.traceback import ParsedTraceback, StackFrame
 class TestStackFrame:
     """Test StackFrame dataclass."""
 
-    def test_create_basic_frame(self):
+    def test_create_basic_frame(self) -> None:
         """Test creating a basic stack frame."""
         frame = StackFrame(
             file_path="/app/src/main.py",
@@ -22,7 +22,7 @@ class TestStackFrame:
         assert frame.function_name == "process_data"
         assert frame.code_line == "result = transform(data)"
 
-    def test_create_frame_without_code_line(self):
+    def test_create_frame_without_code_line(self) -> None:
         """Test creating a frame without code line (optional)."""
         frame = StackFrame(
             file_path="/app/src/main.py",
@@ -32,7 +32,7 @@ class TestStackFrame:
 
         assert frame.code_line is None
 
-    def test_is_stdlib_detects_python_lib(self):
+    def test_is_stdlib_detects_python_lib(self) -> None:
         """Test is_stdlib property identifies standard library frames."""
         frames = [
             StackFrame("/usr/lib/python3.11/asyncio/events.py", 1, "foo"),
@@ -45,12 +45,12 @@ class TestStackFrame:
         for frame in frames:
             assert frame.is_stdlib, f"Expected {frame.file_path} to be stdlib"
 
-    def test_is_stdlib_false_for_project_code(self):
+    def test_is_stdlib_false_for_project_code(self) -> None:
         """Test is_stdlib returns False for project code."""
         frame = StackFrame("/app/src/main.py", 1, "foo")
         assert not frame.is_stdlib
 
-    def test_is_site_packages_detects_third_party(self):
+    def test_is_site_packages_detects_third_party(self) -> None:
         """Test is_site_packages identifies third-party packages."""
         frames = [
             StackFrame("/usr/lib/python3.11/site-packages/requests/api.py", 1, "foo"),
@@ -65,12 +65,12 @@ class TestStackFrame:
         for frame in frames:
             assert frame.is_site_packages, f"Expected {frame.file_path} to be site-packages"
 
-    def test_is_site_packages_false_for_project_code(self):
+    def test_is_site_packages_false_for_project_code(self) -> None:
         """Test is_site_packages returns False for project code."""
         frame = StackFrame("/app/src/main.py", 1, "foo")
         assert not frame.is_site_packages
 
-    def test_normalized_path_strips_prefixes(self):
+    def test_normalized_path_strips_prefixes(self) -> None:
         """Test normalized_path removes common absolute prefixes."""
         test_cases = [
             ("/usr/local/app/src/main.py", "app/src/main.py"),
@@ -82,11 +82,11 @@ class TestStackFrame:
 
         for original, expected in test_cases:
             frame = StackFrame(original, 1, "foo")
-            assert (
-                frame.normalized_path == expected
-            ), f"Expected {expected}, got {frame.normalized_path}"
+            assert frame.normalized_path == expected, (
+                f"Expected {expected}, got {frame.normalized_path}"
+            )
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that StackFrame is frozen (immutable)."""
         frame = StackFrame("/app/main.py", 1, "foo")
 
@@ -97,7 +97,7 @@ class TestStackFrame:
 class TestParsedTraceback:
     """Test ParsedTraceback dataclass."""
 
-    def test_create_simple_traceback(self):
+    def test_create_simple_traceback(self) -> None:
         """Test creating a simple traceback."""
         frame1 = StackFrame("/app/main.py", 10, "main")
         frame2 = StackFrame("/app/utils.py", 42, "helper")
@@ -117,7 +117,7 @@ class TestParsedTraceback:
         assert not tb.is_chained
         assert tb.cause is None
 
-    def test_create_chained_traceback(self):
+    def test_create_chained_traceback(self) -> None:
         """Test creating a chained exception traceback."""
         frame1 = StackFrame("/app/main.py", 10, "main")
         cause_frame = StackFrame("/app/db.py", 20, "connect")
@@ -142,7 +142,7 @@ class TestParsedTraceback:
         assert tb.cause == cause
         assert tb.cause.exception_type == "ConnectionError"
 
-    def test_innermost_frame_returns_last(self):
+    def test_innermost_frame_returns_last(self) -> None:
         """Test innermost_frame property returns the last frame."""
         frames = (
             StackFrame("/app/main.py", 10, "main"),
@@ -160,7 +160,7 @@ class TestParsedTraceback:
         assert tb.innermost_frame == frames[2]
         assert tb.innermost_frame.file_path == "/app/db.py"
 
-    def test_innermost_frame_raises_on_empty(self):
+    def test_innermost_frame_raises_on_empty(self) -> None:
         """Test innermost_frame raises error if no frames."""
         tb = ParsedTraceback(
             exception_type="ValueError",
@@ -172,7 +172,7 @@ class TestParsedTraceback:
         with pytest.raises(ValueError, match="Traceback has no frames"):
             _ = tb.innermost_frame
 
-    def test_project_frames_filters_stdlib_and_site_packages(self):
+    def test_project_frames_filters_stdlib_and_site_packages(self) -> None:
         """Test project_frames filters out stdlib and third-party code."""
         frames = (
             StackFrame("/app/main.py", 10, "main"),  # project
@@ -195,7 +195,7 @@ class TestParsedTraceback:
         assert project_frames[1].file_path == "/app/utils.py"
         assert project_frames[2].file_path == "/app/db.py"
 
-    def test_project_frames_empty_if_no_project_code(self):
+    def test_project_frames_empty_if_no_project_code(self) -> None:
         """Test project_frames returns empty tuple if all frames are stdlib."""
         frames = (
             StackFrame("/usr/lib/python3.11/asyncio/events.py", 20, "run"),
@@ -211,7 +211,7 @@ class TestParsedTraceback:
 
         assert len(tb.project_frames) == 0
 
-    def test_signature_format(self):
+    def test_signature_format(self) -> None:
         """Test signature property format for deduplication."""
         tb = ParsedTraceback(
             exception_type="ValueError",
@@ -222,7 +222,7 @@ class TestParsedTraceback:
 
         assert tb.signature == "ValueError: invalid literal for int(): 'abc'"
 
-    def test_frames_must_be_tuple(self):
+    def test_frames_must_be_tuple(self) -> None:
         """Test that frames is stored as tuple (immutable)."""
         tb = ParsedTraceback(
             exception_type="ValueError",
@@ -233,7 +233,7 @@ class TestParsedTraceback:
 
         assert isinstance(tb.frames, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that ParsedTraceback is frozen (immutable)."""
         tb = ParsedTraceback(
             exception_type="ValueError",

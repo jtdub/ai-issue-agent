@@ -114,7 +114,7 @@ ANTHROPIC_API_KEY=sk-ant-your-api-key
       provider: anthropic
       anthropic:
         api_key: ${ANTHROPIC_API_KEY}
-        model: "claude-3-sonnet-20240229"
+        model: "claude-3-5-sonnet-20241022"  # Or claude-3-5-haiku-20241022
     ```
 
 === "Ollama (Local)"

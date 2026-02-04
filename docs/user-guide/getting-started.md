@@ -21,8 +21,10 @@ AI Issue Agent is an automation tool that monitors your team's chat conversation
 Before you begin, ensure you have:
 
 - **Python 3.11+** installed
+- **Poetry** for dependency management ([install Poetry](https://python-poetry.org/docs/#installation))
 - **A Slack workspace** with admin access to create bot applications
 - **A GitHub account** with permissions to create issues in your repository
+- **GitHub CLI (`gh`)** installed and authenticated
 - **An API key** for OpenAI, Anthropic, or access to a local Ollama instance
 
 ## System Requirements

@@ -16,12 +16,12 @@ from ai_issue_agent.models.issue import (
 class TestIssueState:
     """Test IssueState enum."""
 
-    def test_issue_state_values(self):
+    def test_issue_state_values(self) -> None:
         """Test IssueState enum values."""
         assert IssueState.OPEN.value == "open"
         assert IssueState.CLOSED.value == "closed"
 
-    def test_issue_state_members(self):
+    def test_issue_state_members(self) -> None:
         """Test IssueState has correct members."""
         assert set(IssueState) == {IssueState.OPEN, IssueState.CLOSED}
 
@@ -29,7 +29,7 @@ class TestIssueState:
 class TestIssue:
     """Test Issue dataclass."""
 
-    def test_create_issue(self):
+    def test_create_issue(self) -> None:
         """Test creating an Issue."""
         created = datetime(2024, 1, 1, 12, 0, 0)
         updated = datetime(2024, 1, 2, 14, 30, 0)
@@ -56,7 +56,7 @@ class TestIssue:
         assert issue.updated_at == updated
         assert issue.author == "alice"
 
-    def test_issue_with_empty_labels(self):
+    def test_issue_with_empty_labels(self) -> None:
         """Test creating an issue with no labels."""
         issue = Issue(
             number=1,
@@ -73,7 +73,7 @@ class TestIssue:
         assert issue.labels == ()
         assert len(issue.labels) == 0
 
-    def test_issue_state_closed(self):
+    def test_issue_state_closed(self) -> None:
         """Test issue with closed state."""
         issue = Issue(
             number=1,
@@ -89,7 +89,7 @@ class TestIssue:
 
         assert issue.state == IssueState.CLOSED
 
-    def test_labels_is_tuple(self):
+    def test_labels_is_tuple(self) -> None:
         """Test that labels is a tuple (immutable)."""
         issue = Issue(
             number=1,
@@ -105,7 +105,7 @@ class TestIssue:
 
         assert isinstance(issue.labels, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that Issue is frozen (immutable)."""
         issue = Issue(
             number=1,
@@ -126,7 +126,7 @@ class TestIssue:
 class TestIssueSearchResult:
     """Test IssueSearchResult dataclass."""
 
-    def test_create_search_result(self):
+    def test_create_search_result(self) -> None:
         """Test creating a search result."""
         issue = Issue(
             number=42,
@@ -150,7 +150,7 @@ class TestIssueSearchResult:
         assert result.relevance_score == 0.85
         assert result.matched_terms == ("ValueError", "data processing")
 
-    def test_matched_terms_is_tuple(self):
+    def test_matched_terms_is_tuple(self) -> None:
         """Test that matched_terms is a tuple."""
         issue = Issue(
             number=1,
@@ -170,7 +170,7 @@ class TestIssueSearchResult:
 
         assert isinstance(result.matched_terms, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that IssueSearchResult is frozen."""
         issue = Issue(
             number=1,
@@ -193,7 +193,7 @@ class TestIssueSearchResult:
 class TestIssueCreate:
     """Test IssueCreate dataclass."""
 
-    def test_create_with_all_fields(self):
+    def test_create_with_all_fields(self) -> None:
         """Test creating IssueCreate with all fields."""
         issue_create = IssueCreate(
             title="New bug report",
@@ -207,7 +207,7 @@ class TestIssueCreate:
         assert issue_create.labels == ("bug", "needs-triage")
         assert issue_create.assignees == ("alice", "bob")
 
-    def test_create_with_defaults(self):
+    def test_create_with_defaults(self) -> None:
         """Test creating IssueCreate with default empty tuples."""
         issue_create = IssueCreate(
             title="Simple issue",
@@ -219,7 +219,7 @@ class TestIssueCreate:
         assert issue_create.labels == ()
         assert issue_create.assignees == ()
 
-    def test_labels_and_assignees_are_tuples(self):
+    def test_labels_and_assignees_are_tuples(self) -> None:
         """Test that labels and assignees are tuples."""
         issue_create = IssueCreate(
             title="Test",
@@ -231,7 +231,7 @@ class TestIssueCreate:
         assert isinstance(issue_create.labels, tuple)
         assert isinstance(issue_create.assignees, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that IssueCreate is frozen."""
         issue_create = IssueCreate(title="Test", body="Body")
 
@@ -242,7 +242,7 @@ class TestIssueCreate:
 class TestIssueMatch:
     """Test IssueMatch dataclass."""
 
-    def test_create_issue_match(self):
+    def test_create_issue_match(self) -> None:
         """Test creating an IssueMatch."""
         issue = Issue(
             number=42,
@@ -271,7 +271,7 @@ class TestIssueMatch:
         assert len(match.match_reasons) == 3
         assert "Same exception type" in match.match_reasons
 
-    def test_match_reasons_is_tuple(self):
+    def test_match_reasons_is_tuple(self) -> None:
         """Test that match_reasons is a tuple."""
         issue = Issue(
             number=1,
@@ -293,7 +293,7 @@ class TestIssueMatch:
 
         assert isinstance(match.match_reasons, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that IssueMatch is frozen."""
         issue = Issue(
             number=1,

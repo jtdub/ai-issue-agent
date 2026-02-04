@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -303,7 +304,7 @@ class TestSafeGHCliClone:
         with patch("shutil.which", return_value="/usr/bin/gh"):
             return SafeGHCli()
 
-    async def test_clone_disables_hooks(self, gh: SafeGHCli, tmp_path) -> None:
+    async def test_clone_disables_hooks(self, gh: SafeGHCli, tmp_path: Path) -> None:
         """Test that clone disables git hooks for security."""
         with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
             mock_proc = MagicMock()
@@ -319,7 +320,7 @@ class TestSafeGHCliClone:
             # The actual command includes -c core.hooksPath=/dev/null
             # which is verified through integration tests
 
-    async def test_clone_validates_repo_name(self, gh: SafeGHCli, tmp_path) -> None:
+    async def test_clone_validates_repo_name(self, gh: SafeGHCli, tmp_path: Path) -> None:
         """Test that clone validates repository names."""
         with pytest.raises(SecurityError, match="Invalid repository name"):
             await gh.clone_repository("malicious; rm -rf /", tmp_path)
@@ -342,3 +343,178 @@ class TestSafeGHCliTimeout:
 
             with pytest.raises(CommandTimeoutError):
                 await gh.search_issues("owner/repo", "query")
+
+
+class TestSafeGHCliGetIssue:
+    """Test get_issue method."""
+
+    @pytest.fixture
+    def gh(self) -> SafeGHCli:
+        """Create a SafeGHCli instance with mocked gh path."""
+        with patch("shutil.which", return_value="/usr/bin/gh"):
+            return SafeGHCli()
+
+    async def test_get_issue_builds_correct_command(self, gh: SafeGHCli) -> None:
+        """Test that get_issue builds the correct command."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = '{"number": 42}'
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            result = await gh.get_issue("owner/repo", 42)
+
+            assert result.success
+            mock_thread.assert_called_once()
+
+    async def test_get_issue_validates_repo(self, gh: SafeGHCli) -> None:
+        """Test that get_issue validates repository name."""
+        with pytest.raises(SecurityError, match="Invalid repository name"):
+            await gh.get_issue("malicious; rm -rf /", 42)
+
+
+class TestSafeGHCliCreateIssue:
+    """Test create_issue method."""
+
+    @pytest.fixture
+    def gh(self) -> SafeGHCli:
+        """Create a SafeGHCli instance with mocked gh path."""
+        with patch("shutil.which", return_value="/usr/bin/gh"):
+            return SafeGHCli()
+
+    async def test_create_issue_with_labels(self, gh: SafeGHCli) -> None:
+        """Test creating an issue with labels."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = '{"number": 100}'
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            result = await gh.create_issue(
+                "owner/repo",
+                "Test Issue",
+                "Issue body",
+                labels=["bug", "high-priority"],
+            )
+
+            assert result.success
+            mock_thread.assert_called_once()
+
+    async def test_create_issue_without_labels(self, gh: SafeGHCli) -> None:
+        """Test creating an issue without labels."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = '{"number": 101}'
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            result = await gh.create_issue("owner/repo", "Test Issue", "Body")
+
+            assert result.success
+
+
+class TestSafeGHCliGetFileContent:
+    """Test get_file_content method."""
+
+    @pytest.fixture
+    def gh(self) -> SafeGHCli:
+        """Create a SafeGHCli instance with mocked gh path."""
+        with patch("shutil.which", return_value="/usr/bin/gh"):
+            return SafeGHCli()
+
+    async def test_get_file_content_returns_content(self, gh: SafeGHCli) -> None:
+        """Test getting file content."""
+        import base64
+
+        # The API returns base64-encoded content
+        content_text = "def hello(): pass"
+        content_b64 = base64.b64encode(content_text.encode()).decode()
+
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = content_b64
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            content = await gh.get_file_content("owner/repo", "src/hello.py")
+
+            assert content == content_text
+
+    async def test_get_file_content_with_ref(self, gh: SafeGHCli) -> None:
+        """Test getting file content at a specific ref."""
+        import base64
+
+        content_text = "# Old version"
+        content_b64 = base64.b64encode(content_text.encode()).decode()
+
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = content_b64
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            content = await gh.get_file_content("owner/repo", "README.md", ref="v1.0.0")
+
+            assert content == content_text
+
+    async def test_get_file_content_not_found_returns_none(self, gh: SafeGHCli) -> None:
+        """Test getting non-existent file returns None (NotFoundError is caught)."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            mock_proc.stdout = ""
+            mock_proc.stderr = "Could not resolve to a Blob"
+            mock_proc.returncode = 1
+            mock_thread.return_value = mock_proc
+
+            # The implementation catches NotFoundError and returns None
+            content = await gh.get_file_content("owner/repo", "nonexistent.py")
+
+            assert content is None
+
+
+class TestSafeGHCliGetDefaultBranch:
+    """Test get_default_branch method."""
+
+    @pytest.fixture
+    def gh(self) -> SafeGHCli:
+        """Create a SafeGHCli instance with mocked gh path."""
+        with patch("shutil.which", return_value="/usr/bin/gh"):
+            return SafeGHCli()
+
+    async def test_get_default_branch_returns_main(self, gh: SafeGHCli) -> None:
+        """Test getting default branch when it's main."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            # --jq extracts just the branch name directly
+            mock_proc.stdout = "main\n"
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            branch = await gh.get_default_branch("owner/repo")
+
+            assert branch == "main"
+
+    async def test_get_default_branch_returns_master(self, gh: SafeGHCli) -> None:
+        """Test getting default branch when it's master."""
+        with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
+            mock_proc = MagicMock()
+            # --jq extracts just the branch name directly
+            mock_proc.stdout = "master\n"
+            mock_proc.stderr = ""
+            mock_proc.returncode = 0
+            mock_thread.return_value = mock_proc
+
+            branch = await gh.get_default_branch("owner/repo")
+
+            assert branch == "master"
+
+    async def test_get_default_branch_validates_repo(self, gh: SafeGHCli) -> None:
+        """Test that get_default_branch validates repository name."""
+        with pytest.raises(SecurityError, match="Invalid repository name"):
+            await gh.get_default_branch("invalid$(whoami)")

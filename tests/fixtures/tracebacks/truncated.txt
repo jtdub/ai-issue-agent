@@ -1,0 +1,5 @@
+  File "/app/src/processor.py", line 89, in process
+    result = transform_data(input_data)
+  File "/app/src/transformer.py", line 34, in transform_data
+    return json.loads(data)
+JSONDecodeError: Expecting value: line 1 column 1 (char 0)

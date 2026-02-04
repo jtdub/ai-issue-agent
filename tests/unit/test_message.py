@@ -1,6 +1,7 @@
 """Tests for message data models."""
 
 from datetime import datetime
+from typing import Any
 
 import pytest
 
@@ -10,7 +11,7 @@ from ai_issue_agent.models.message import ChatMessage, ChatReply, ProcessingResu
 class TestChatMessage:
     """Test ChatMessage dataclass."""
 
-    def test_create_chat_message(self):
+    def test_create_chat_message(self) -> None:
         """Test creating a ChatMessage."""
         timestamp = datetime(2024, 1, 15, 10, 30, 0)
         raw_event = {"type": "message", "ts": "1234567890.123456"}
@@ -35,7 +36,7 @@ class TestChatMessage:
         assert message.timestamp == timestamp
         assert message.raw_event == raw_event
 
-    def test_create_message_without_thread(self):
+    def test_create_message_without_thread(self) -> None:
         """Test creating a message not in a thread."""
         message = ChatMessage(
             channel_id="C12345",
@@ -50,7 +51,7 @@ class TestChatMessage:
 
         assert message.thread_id is None
 
-    def test_raw_event_preserves_dict(self):
+    def test_raw_event_preserves_dict(self) -> None:
         """Test that raw_event preserves the original dict."""
         raw_event = {
             "type": "message",
@@ -74,7 +75,7 @@ class TestChatMessage:
         assert message.raw_event == raw_event
         assert message.raw_event["type"] == "message"
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that ChatMessage is frozen (immutable)."""
         message = ChatMessage(
             channel_id="C12345",
@@ -94,7 +95,7 @@ class TestChatMessage:
 class TestChatReply:
     """Test ChatReply dataclass."""
 
-    def test_create_simple_reply(self):
+    def test_create_simple_reply(self) -> None:
         """Test creating a simple reply."""
         reply = ChatReply(
             channel_id="C12345",
@@ -106,7 +107,7 @@ class TestChatReply:
         assert reply.thread_id is None
         assert reply.blocks is None
 
-    def test_create_threaded_reply(self):
+    def test_create_threaded_reply(self) -> None:
         """Test creating a reply in a thread."""
         reply = ChatReply(
             channel_id="C12345",
@@ -118,9 +119,9 @@ class TestChatReply:
         assert reply.thread_id == "T11111"
         assert reply.blocks is None
 
-    def test_create_reply_with_blocks(self):
+    def test_create_reply_with_blocks(self) -> None:
         """Test creating a reply with rich formatting blocks."""
-        blocks = [
+        blocks: list[dict[str, Any]] = [
             {"type": "section", "text": {"type": "mrkdwn", "text": "*Bold text*"}},
             {
                 "type": "actions",
@@ -138,7 +139,7 @@ class TestChatReply:
         assert len(reply.blocks) == 2
         assert reply.blocks[0]["type"] == "section"
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that ChatReply is frozen (immutable)."""
         reply = ChatReply(channel_id="C12345", text="test")
 
@@ -149,14 +150,14 @@ class TestChatReply:
 class TestProcessingResult:
     """Test ProcessingResult enum."""
 
-    def test_processing_result_values(self):
+    def test_processing_result_values(self) -> None:
         """Test ProcessingResult enum values."""
         assert ProcessingResult.NO_TRACEBACK.value == "no_traceback"
         assert ProcessingResult.EXISTING_ISSUE_LINKED.value == "existing_issue_linked"
         assert ProcessingResult.NEW_ISSUE_CREATED.value == "new_issue_created"
         assert ProcessingResult.ERROR.value == "error"
 
-    def test_processing_result_members(self):
+    def test_processing_result_members(self) -> None:
         """Test ProcessingResult has all expected members."""
         expected = {
             ProcessingResult.NO_TRACEBACK,
@@ -166,14 +167,14 @@ class TestProcessingResult:
         }
         assert set(ProcessingResult) == expected
 
-    def test_can_use_in_comparisons(self):
+    def test_can_use_in_comparisons(self) -> None:
         """Test that enum members can be compared."""
-        result = ProcessingResult.NEW_ISSUE_CREATED
+        result: ProcessingResult = ProcessingResult.NEW_ISSUE_CREATED
 
         assert result == ProcessingResult.NEW_ISSUE_CREATED
-        assert result != ProcessingResult.ERROR
+        assert result != ProcessingResult.ERROR  # type: ignore[comparison-overlap]
 
-    def test_can_use_in_conditionals(self):
+    def test_can_use_in_conditionals(self) -> None:
         """Test using ProcessingResult in conditional logic."""
         result = ProcessingResult.NO_TRACEBACK
 

@@ -36,6 +36,30 @@ def traceback_with_secrets() -> str:
 
 
 @pytest.fixture
+def syntax_error_traceback() -> str:
+    """Load a SyntaxError traceback."""
+    return (TRACEBACKS_DIR / "syntax_error.txt").read_text()
+
+
+@pytest.fixture
+def multiline_msg_traceback() -> str:
+    """Load a traceback with multi-line exception message."""
+    return (TRACEBACKS_DIR / "multiline_msg.txt").read_text()
+
+
+@pytest.fixture
+def code_block_traceback() -> str:
+    """Load a traceback embedded in a markdown code block."""
+    return (TRACEBACKS_DIR / "in_code_block.txt").read_text()
+
+
+@pytest.fixture
+def truncated_traceback() -> str:
+    """Load a truncated traceback missing the header."""
+    return (TRACEBACKS_DIR / "truncated.txt").read_text()
+
+
+@pytest.fixture
 def known_secrets() -> list[tuple[str, str]]:
     """Return a list of (secret, pattern_name) tuples for testing."""
     return [

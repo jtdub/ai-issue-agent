@@ -80,7 +80,7 @@ class AnthropicConfig(BaseModel):
     """Anthropic-specific configuration."""
 
     api_key: str
-    model: str = "claude-3-sonnet-20240229"
+    model: str = "claude-3-5-sonnet-20241022"
     max_tokens: int = 4096
     temperature: float = 0.3
 
@@ -173,8 +173,8 @@ class AgentConfig(BaseSettings):
     chat: ChatConfig
     vcs: VCSConfig
     llm: LLMConfig
-    matching: MatchingConfig = MatchingConfig()  # type: ignore[call-arg]
-    analysis: AnalysisConfig = AnalysisConfig()  # type: ignore[call-arg]
+    matching: MatchingConfig = MatchingConfig()
+    analysis: AnalysisConfig = AnalysisConfig()
 
     model_config = SettingsConfigDict(
         env_file=".env",

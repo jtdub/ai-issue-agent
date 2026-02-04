@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/app/src/validator.py", line 78, in validate_config
+    raise ConfigurationError(message)
+ConfigurationError: Invalid configuration detected:
+  - Missing required field 'database.host'
+  - Invalid value for 'server.port': must be between 1 and 65535
+  - Unknown field 'extra_setting' in section 'logging'
