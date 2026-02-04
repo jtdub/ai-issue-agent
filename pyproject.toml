@@ -72,6 +72,10 @@ Documentation = "https://github.com/jtdub/ai-issue-agent/blob/main/docs"
 ai-issue-agent = "ai_issue_agent.__main__:main"
 
 [tool.poetry]
+name = "ai-issue-agent"
+version = "0.1.0"
+description = "Automation system that monitors chat platforms for Python tracebacks and automatically triages them as GitHub issues"
+authors = ["AI Issue Agent Contributors"]
 packages = [
     { include = "ai_issue_agent", from = "src" }
 ]
@@ -100,7 +104,13 @@ no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_configs = true
 show_error_codes = true
-files = ["src"]
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [[tool.mypy.overrides]]
 module = [

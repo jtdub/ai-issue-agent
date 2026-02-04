@@ -8,7 +8,7 @@ from ai_issue_agent.models.analysis import CodeContext, ErrorAnalysis, Suggested
 class TestCodeContext:
     """Test CodeContext dataclass."""
 
-    def test_create_code_context(self):
+    def test_create_code_context(self) -> None:
         """Test creating a CodeContext."""
         code = """def process_data(data):
     result = transform(data)
@@ -28,7 +28,7 @@ class TestCodeContext:
         assert context.content == code
         assert context.highlight_line == 11
 
-    def test_create_context_without_highlight(self):
+    def test_create_context_without_highlight(self) -> None:
         """Test creating context without highlight line."""
         context = CodeContext(
             file_path="/app/main.py",
@@ -39,7 +39,7 @@ class TestCodeContext:
 
         assert context.highlight_line is None
 
-    def test_line_count_property(self):
+    def test_line_count_property(self) -> None:
         """Test line_count property calculation."""
         test_cases = [
             (1, 1, 1),  # Single line
@@ -55,11 +55,11 @@ class TestCodeContext:
                 end_line=end,
                 content="",
             )
-            assert (
-                context.line_count == expected_count
-            ), f"Expected {expected_count} for lines {start}-{end}"
+            assert context.line_count == expected_count, (
+                f"Expected {expected_count} for lines {start}-{end}"
+            )
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that CodeContext is frozen (immutable)."""
         context = CodeContext(
             file_path="test.py",
@@ -75,7 +75,7 @@ class TestCodeContext:
 class TestSuggestedFix:
     """Test SuggestedFix dataclass."""
 
-    def test_create_suggested_fix(self):
+    def test_create_suggested_fix(self) -> None:
         """Test creating a SuggestedFix."""
         fix = SuggestedFix(
             description="Add type validation before conversion",
@@ -91,7 +91,7 @@ class TestSuggestedFix:
         assert "isdigit()" in fix.fixed_code
         assert fix.confidence == 0.85
 
-    def test_confidence_as_float(self):
+    def test_confidence_as_float(self) -> None:
         """Test confidence is stored as float."""
         fix = SuggestedFix(
             description="Test",
@@ -104,7 +104,7 @@ class TestSuggestedFix:
         assert isinstance(fix.confidence, float)
         assert 0.0 <= fix.confidence <= 1.0
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that SuggestedFix is frozen (immutable)."""
         fix = SuggestedFix(
             description="Test",
@@ -121,7 +121,7 @@ class TestSuggestedFix:
 class TestErrorAnalysis:
     """Test ErrorAnalysis dataclass."""
 
-    def test_create_error_analysis(self):
+    def test_create_error_analysis(self) -> None:
         """Test creating an ErrorAnalysis."""
         fix1 = SuggestedFix(
             description="Fix type error",
@@ -163,7 +163,7 @@ class TestErrorAnalysis:
         assert analysis.severity == "medium"
         assert analysis.confidence == 0.85
 
-    def test_create_analysis_with_no_fixes(self):
+    def test_create_analysis_with_no_fixes(self) -> None:
         """Test creating analysis with no suggested fixes."""
         analysis = ErrorAnalysis(
             root_cause="Complex error",
@@ -177,7 +177,7 @@ class TestErrorAnalysis:
         assert len(analysis.suggested_fixes) == 0
         assert len(analysis.related_documentation) == 0
 
-    def test_severity_values(self):
+    def test_severity_values(self) -> None:
         """Test different severity levels."""
         severities = ["low", "medium", "high", "critical"]
 
@@ -192,7 +192,7 @@ class TestErrorAnalysis:
             )
             assert analysis.severity == severity
 
-    def test_suggested_fixes_is_tuple(self):
+    def test_suggested_fixes_is_tuple(self) -> None:
         """Test that suggested_fixes is a tuple (immutable)."""
         fix = SuggestedFix(
             description="Test",
@@ -213,7 +213,7 @@ class TestErrorAnalysis:
 
         assert isinstance(analysis.suggested_fixes, tuple)
 
-    def test_related_documentation_is_tuple(self):
+    def test_related_documentation_is_tuple(self) -> None:
         """Test that related_documentation is a tuple."""
         analysis = ErrorAnalysis(
             root_cause="Test",
@@ -226,7 +226,7 @@ class TestErrorAnalysis:
 
         assert isinstance(analysis.related_documentation, tuple)
 
-    def test_frozen_immutable(self):
+    def test_frozen_immutable(self) -> None:
         """Test that ErrorAnalysis is frozen (immutable)."""
         analysis = ErrorAnalysis(
             root_cause="Test",

@@ -25,14 +25,14 @@ from ai_issue_agent.config.schema import (
 class TestSubstituteEnvVars:
     """Test environment variable substitution."""
 
-    def test_substitute_single_var(self):
+    def test_substitute_single_var(self) -> None:
         """Test substituting a single environment variable."""
         os.environ["TEST_VAR"] = "test_value"
         result = substitute_env_vars("Value is ${TEST_VAR}")
         assert result == "Value is test_value"
         del os.environ["TEST_VAR"]
 
-    def test_substitute_multiple_vars(self):
+    def test_substitute_multiple_vars(self) -> None:
         """Test substituting multiple environment variables."""
         os.environ["VAR1"] = "value1"
         os.environ["VAR2"] = "value2"
@@ -41,12 +41,12 @@ class TestSubstituteEnvVars:
         del os.environ["VAR1"]
         del os.environ["VAR2"]
 
-    def test_missing_env_var_raises(self):
+    def test_missing_env_var_raises(self) -> None:
         """Test that missing environment variables raise ValueError."""
         with pytest.raises(ValueError, match="Environment variable MISSING not found"):
             substitute_env_vars("Value is ${MISSING}")
 
-    def test_no_substitution_needed(self):
+    def test_no_substitution_needed(self) -> None:
         """Test text without environment variables passes through unchanged."""
         result = substitute_env_vars("plain text without vars")
         assert result == "plain text without vars"
@@ -55,7 +55,7 @@ class TestSubstituteEnvVars:
 class TestSlackConfig:
     """Test SlackConfig validation."""
 
-    def test_valid_slack_config(self):
+    def test_valid_slack_config(self) -> None:
         """Test creating valid Slack config."""
         config = SlackConfig(
             bot_token="xoxb-123-456-abc",
@@ -66,7 +66,7 @@ class TestSlackConfig:
         assert config.app_token == "xapp-1-A0-abc"
         assert config.channels == ["#errors"]
 
-    def test_invalid_bot_token_rejected(self):
+    def test_invalid_bot_token_rejected(self) -> None:
         """Test that invalid bot token format is rejected."""
         with pytest.raises(ValidationError, match="Bot token must start with xoxb-"):
             SlackConfig(
@@ -74,7 +74,7 @@ class TestSlackConfig:
                 app_token="xapp-1-A0-abc",
             )
 
-    def test_invalid_app_token_rejected(self):
+    def test_invalid_app_token_rejected(self) -> None:
         """Test that invalid app token format is rejected."""
         with pytest.raises(ValidationError, match="App token must start with xapp-"):
             SlackConfig(
@@ -82,7 +82,7 @@ class TestSlackConfig:
                 app_token="invalid-token",
             )
 
-    def test_default_reactions(self):
+    def test_default_reactions(self) -> None:
         """Test default reaction values."""
         config = SlackConfig(
             bot_token="xoxb-123-456-abc",
@@ -96,14 +96,14 @@ class TestSlackConfig:
 class TestGitHubConfig:
     """Test GitHubConfig validation."""
 
-    def test_valid_github_config(self):
+    def test_valid_github_config(self) -> None:
         """Test creating valid GitHub config."""
         config = GitHubConfig(default_repo="owner/repo")
         assert config.default_repo == "owner/repo"
         assert config.clone_cache_ttl == 3600
         assert config.default_labels == ["auto-triaged"]
 
-    def test_invalid_repo_name_rejected(self):
+    def test_invalid_repo_name_rejected(self) -> None:
         """Test that invalid repository names are rejected."""
         invalid_repos = [
             "invalid",  # Missing slash
@@ -117,7 +117,7 @@ class TestGitHubConfig:
             with pytest.raises(ValidationError, match="Invalid repository format"):
                 GitHubConfig(default_repo=repo)
 
-    def test_allowed_repos_with_wildcard(self):
+    def test_allowed_repos_with_wildcard(self) -> None:
         """Test allowed_repos with wildcard patterns."""
         config = GitHubConfig(
             default_repo="myorg/myrepo",
@@ -126,7 +126,7 @@ class TestGitHubConfig:
         assert "myorg/*" in config.allowed_repos
         assert "otherorg/specific-repo" in config.allowed_repos
 
-    def test_invalid_allowed_repo_rejected(self):
+    def test_invalid_allowed_repo_rejected(self) -> None:
         """Test that invalid repo in allowed_repos is rejected."""
         with pytest.raises(ValidationError, match="Invalid repository format"):
             GitHubConfig(
@@ -138,22 +138,22 @@ class TestGitHubConfig:
 class TestOllamaConfig:
     """Test OllamaConfig validation and SSRF prevention."""
 
-    def test_localhost_allowed(self):
+    def test_localhost_allowed(self) -> None:
         """Test that localhost URLs are allowed."""
         config = OllamaConfig(base_url="http://localhost:11434")
         assert config.base_url == "http://localhost:11434"
 
-    def test_127_0_0_1_allowed(self):
+    def test_127_0_0_1_allowed(self) -> None:
         """Test that 127.0.0.1 URLs are allowed."""
         config = OllamaConfig(base_url="http://127.0.0.1:11434")
         assert config.base_url == "http://127.0.0.1:11434"
 
-    def test_remote_blocked_by_default(self):
+    def test_remote_blocked_by_default(self) -> None:
         """Test that non-localhost URLs are blocked by default."""
         with pytest.raises(ValidationError):
             OllamaConfig(base_url="http://192.168.1.100:11434")
 
-    def test_remote_allowed_with_flag(self):
+    def test_remote_allowed_with_flag(self) -> None:
         """Test that non-localhost URLs are allowed with explicit flag."""
         config = OllamaConfig(
             base_url="http://192.168.1.100:11434",
@@ -162,12 +162,12 @@ class TestOllamaConfig:
         assert config.base_url == "http://192.168.1.100:11434"
         assert config.allow_remote_host is True
 
-    def test_ssrf_prevention_aws_metadata(self):
+    def test_ssrf_prevention_aws_metadata(self) -> None:
         """Test SSRF prevention for AWS metadata endpoint."""
         with pytest.raises(ValidationError):
             OllamaConfig(base_url="http://169.254.169.254/latest/meta-data/")
 
-    def test_default_values(self):
+    def test_default_values(self) -> None:
         """Test default configuration values."""
         config = OllamaConfig()
         assert config.base_url == "http://localhost:11434"
@@ -179,14 +179,14 @@ class TestOllamaConfig:
 class TestVCSConfig:
     """Test VCSConfig validation."""
 
-    def test_valid_vcs_config(self):
+    def test_valid_vcs_config(self) -> None:
         """Test creating valid VCS config."""
         github_config = GitHubConfig(default_repo="owner/repo")
         config = VCSConfig(provider="github", github=github_config)
         assert config.provider == "github"
         assert config.github is not None
 
-    def test_channel_repos_validation(self):
+    def test_channel_repos_validation(self) -> None:
         """Test channel_repos validation."""
         github_config = GitHubConfig(default_repo="owner/repo")
         config = VCSConfig(
@@ -200,7 +200,7 @@ class TestVCSConfig:
         assert len(config.channel_repos) == 2
         assert config.channel_repos["#frontend"] == "owner/frontend"
 
-    def test_invalid_channel_repo_rejected(self):
+    def test_invalid_channel_repo_rejected(self) -> None:
         """Test that invalid repo in channel_repos is rejected."""
         github_config = GitHubConfig(default_repo="owner/repo")
         with pytest.raises(ValidationError, match="Invalid repository format"):
@@ -214,7 +214,7 @@ class TestVCSConfig:
 class TestMatchingConfig:
     """Test MatchingConfig validation."""
 
-    def test_default_values(self):
+    def test_default_values(self) -> None:
         """Test default matching configuration values."""
         config = MatchingConfig()
         assert config.confidence_threshold == 0.85
@@ -222,7 +222,7 @@ class TestMatchingConfig:
         assert config.include_closed is True
         assert config.search_cache_ttl == 300
 
-    def test_confidence_threshold_bounds(self):
+    def test_confidence_threshold_bounds(self) -> None:
         """Test that confidence_threshold is bounded between 0 and 1."""
         # Valid values
         MatchingConfig(confidence_threshold=0.0)
@@ -235,7 +235,7 @@ class TestMatchingConfig:
         with pytest.raises(ValidationError):
             MatchingConfig(confidence_threshold=1.1)
 
-    def test_max_search_results_bounds(self):
+    def test_max_search_results_bounds(self) -> None:
         """Test that max_search_results is bounded."""
         # Valid values
         MatchingConfig(max_search_results=1)
@@ -252,7 +252,7 @@ class TestMatchingConfig:
 class TestAnalysisConfig:
     """Test AnalysisConfig validation."""
 
-    def test_default_values(self):
+    def test_default_values(self) -> None:
         """Test default analysis configuration values."""
         config = AnalysisConfig()
         assert config.context_lines == 15
@@ -260,7 +260,7 @@ class TestAnalysisConfig:
         assert "/usr/lib/python" in config.skip_paths
         assert "README.md" in config.include_files
 
-    def test_context_lines_bounds(self):
+    def test_context_lines_bounds(self) -> None:
         """Test that context_lines is bounded."""
         # Valid values
         AnalysisConfig(context_lines=1)
@@ -273,7 +273,7 @@ class TestAnalysisConfig:
         with pytest.raises(ValidationError):
             AnalysisConfig(context_lines=101)
 
-    def test_max_files_bounds(self):
+    def test_max_files_bounds(self) -> None:
         """Test that max_files is bounded."""
         # Valid values
         AnalysisConfig(max_files=1)
@@ -290,7 +290,7 @@ class TestAnalysisConfig:
 class TestLoadConfig:
     """Test configuration loading from YAML."""
 
-    def test_load_valid_config(self):
+    def test_load_valid_config(self) -> None:
         """Test loading a valid configuration file."""
         # Set environment variables
         os.environ["TEST_SLACK_BOT_TOKEN"] = "xoxb-test-123"
@@ -325,8 +325,10 @@ llm:
             try:
                 config = load_config(Path(f.name))
                 assert config.chat.provider == "slack"
+                assert config.chat.slack is not None
                 assert config.chat.slack.bot_token == "xoxb-test-123"
                 assert config.vcs.provider == "github"
+                assert config.vcs.github is not None
                 assert config.vcs.github.default_repo == "owner/repo"
                 assert config.llm.provider == "anthropic"
             finally:
@@ -335,12 +337,12 @@ llm:
                 del os.environ["TEST_SLACK_APP_TOKEN"]
                 del os.environ["TEST_ANTHROPIC_KEY"]
 
-    def test_load_config_missing_file(self):
+    def test_load_config_missing_file(self) -> None:
         """Test that loading non-existent file raises error."""
         with pytest.raises(FileNotFoundError):
             load_config(Path("/nonexistent/config.yaml"))
 
-    def test_load_config_missing_env_var(self):
+    def test_load_config_missing_env_var(self) -> None:
         """Test that missing environment variable raises error."""
         yaml_content = """
 chat:
@@ -364,7 +366,7 @@ chat:
 class TestValidateConfig:
     """Test cross-field configuration validation."""
 
-    def test_slack_provider_without_slack_config(self):
+    def test_slack_provider_without_slack_config(self) -> None:
         """Test that selecting slack provider without slack config raises error."""
         chat_config = ChatConfig(provider="slack", slack=None)
         vcs_config = VCSConfig(provider="github", github=GitHubConfig(default_repo="owner/repo"))
@@ -375,7 +377,7 @@ class TestValidateConfig:
         with pytest.raises(ValueError, match="Slack provider selected but slack config missing"):
             validate_config(config)
 
-    def test_github_provider_without_github_config(self):
+    def test_github_provider_without_github_config(self) -> None:
         """Test that selecting github provider without github config raises error."""
         chat_config = ChatConfig(
             provider="slack",
@@ -389,7 +391,7 @@ class TestValidateConfig:
         with pytest.raises(ValueError, match="GitHub provider selected but github config missing"):
             validate_config(config)
 
-    def test_openai_provider_without_openai_config(self):
+    def test_openai_provider_without_openai_config(self) -> None:
         """Test that selecting openai provider without openai config raises error."""
         chat_config = ChatConfig(
             provider="slack",
@@ -403,7 +405,7 @@ class TestValidateConfig:
         with pytest.raises(ValueError, match="OpenAI provider selected but openai config missing"):
             validate_config(config)
 
-    def test_valid_config_passes(self):
+    def test_valid_config_passes(self) -> None:
         """Test that valid configuration passes validation."""
         chat_config = ChatConfig(
             provider="slack",

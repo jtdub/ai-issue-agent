@@ -215,7 +215,7 @@ class MockLLMProvider:
 class TestChatProviderProtocol:
     """Test ChatProvider protocol compliance."""
 
-    def test_mock_chat_provider_implements_protocol(self):
+    def test_mock_chat_provider_implements_protocol(self) -> None:
         """Test that MockChatProvider implements ChatProvider protocol."""
         provider = MockChatProvider()
         # Check that the instance implements the protocol
@@ -227,19 +227,19 @@ class TestChatProviderProtocol:
         assert hasattr(provider, "remove_reaction")
 
     @pytest.mark.asyncio
-    async def test_chat_provider_connect(self):
+    async def test_chat_provider_connect(self) -> None:
         """Test connect method."""
         provider = MockChatProvider()
         await provider.connect()
 
     @pytest.mark.asyncio
-    async def test_chat_provider_disconnect(self):
+    async def test_chat_provider_disconnect(self) -> None:
         """Test disconnect method."""
         provider = MockChatProvider()
         await provider.disconnect()
 
     @pytest.mark.asyncio
-    async def test_chat_provider_listen(self):
+    async def test_chat_provider_listen(self) -> None:
         """Test listen method."""
         provider = MockChatProvider()
         messages = []
@@ -251,7 +251,7 @@ class TestChatProviderProtocol:
         assert isinstance(messages[0], ChatMessage)
 
     @pytest.mark.asyncio
-    async def test_chat_provider_send_reply(self):
+    async def test_chat_provider_send_reply(self) -> None:
         """Test send_reply method."""
         provider = MockChatProvider()
         message_id = await provider.send_reply(
@@ -261,7 +261,7 @@ class TestChatProviderProtocol:
         assert isinstance(message_id, str)
 
     @pytest.mark.asyncio
-    async def test_chat_provider_add_reaction(self):
+    async def test_chat_provider_add_reaction(self) -> None:
         """Test add_reaction method."""
         provider = MockChatProvider()
         await provider.add_reaction(
@@ -271,7 +271,7 @@ class TestChatProviderProtocol:
         )
 
     @pytest.mark.asyncio
-    async def test_chat_provider_remove_reaction(self):
+    async def test_chat_provider_remove_reaction(self) -> None:
         """Test remove_reaction method."""
         provider = MockChatProvider()
         await provider.remove_reaction(
@@ -284,7 +284,7 @@ class TestChatProviderProtocol:
 class TestVCSProviderProtocol:
     """Test VCSProvider protocol compliance."""
 
-    def test_mock_vcs_provider_implements_protocol(self):
+    def test_mock_vcs_provider_implements_protocol(self) -> None:
         """Test that MockVCSProvider implements VCSProvider protocol."""
         provider = MockVCSProvider()
         assert hasattr(provider, "search_issues")
@@ -295,7 +295,7 @@ class TestVCSProviderProtocol:
         assert hasattr(provider, "get_default_branch")
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_search_issues(self):
+    async def test_vcs_provider_search_issues(self) -> None:
         """Test search_issues method."""
         provider = MockVCSProvider()
         results = await provider.search_issues(
@@ -306,7 +306,7 @@ class TestVCSProviderProtocol:
         assert isinstance(results[0], IssueSearchResult)
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_get_issue(self):
+    async def test_vcs_provider_get_issue(self) -> None:
         """Test get_issue method."""
         provider = MockVCSProvider()
         issue = await provider.get_issue(repo="owner/repo", issue_number=42)
@@ -315,7 +315,7 @@ class TestVCSProviderProtocol:
         assert issue.number == 42
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_create_issue(self):
+    async def test_vcs_provider_create_issue(self) -> None:
         """Test create_issue method."""
         provider = MockVCSProvider()
         issue_create = IssueCreate(title="New Issue", body="Body")
@@ -324,7 +324,7 @@ class TestVCSProviderProtocol:
         assert issue.title == "New Issue"
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_clone_repository(self):
+    async def test_vcs_provider_clone_repository(self) -> None:
         """Test clone_repository method."""
         provider = MockVCSProvider()
         dest = Path("/tmp/repos")  # noqa: S108
@@ -335,7 +335,7 @@ class TestVCSProviderProtocol:
         assert isinstance(result, Path)
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_get_file_content(self):
+    async def test_vcs_provider_get_file_content(self) -> None:
         """Test get_file_content method."""
         provider = MockVCSProvider()
         content = await provider.get_file_content(
@@ -346,7 +346,7 @@ class TestVCSProviderProtocol:
         assert isinstance(content, str)
 
     @pytest.mark.asyncio
-    async def test_vcs_provider_get_default_branch(self):
+    async def test_vcs_provider_get_default_branch(self) -> None:
         """Test get_default_branch method."""
         provider = MockVCSProvider()
         branch = await provider.get_default_branch(repo="owner/repo")
@@ -357,7 +357,7 @@ class TestVCSProviderProtocol:
 class TestLLMProviderProtocol:
     """Test LLMProvider protocol compliance."""
 
-    def test_mock_llm_provider_implements_protocol(self):
+    def test_mock_llm_provider_implements_protocol(self) -> None:
         """Test that MockLLMProvider implements LLMProvider protocol."""
         provider = MockLLMProvider()
         assert hasattr(provider, "analyze_error")
@@ -368,7 +368,7 @@ class TestLLMProviderProtocol:
         assert hasattr(provider, "max_context_tokens")
 
     @pytest.mark.asyncio
-    async def test_llm_provider_analyze_error(self):
+    async def test_llm_provider_analyze_error(self) -> None:
         """Test analyze_error method."""
         provider = MockLLMProvider()
         traceback = ParsedTraceback(
@@ -384,7 +384,7 @@ class TestLLMProviderProtocol:
         assert isinstance(analysis, ErrorAnalysis)
 
     @pytest.mark.asyncio
-    async def test_llm_provider_generate_issue_body(self):
+    async def test_llm_provider_generate_issue_body(self) -> None:
         """Test generate_issue_body method."""
         provider = MockLLMProvider()
         traceback = ParsedTraceback(
@@ -409,7 +409,7 @@ class TestLLMProviderProtocol:
         assert isinstance(body, str)
 
     @pytest.mark.asyncio
-    async def test_llm_provider_generate_issue_title(self):
+    async def test_llm_provider_generate_issue_title(self) -> None:
         """Test generate_issue_title method."""
         provider = MockLLMProvider()
         traceback = ParsedTraceback(
@@ -434,7 +434,7 @@ class TestLLMProviderProtocol:
         assert "ValueError" in title
 
     @pytest.mark.asyncio
-    async def test_llm_provider_calculate_similarity(self):
+    async def test_llm_provider_calculate_similarity(self) -> None:
         """Test calculate_similarity method."""
         provider = MockLLMProvider()
         traceback = ParsedTraceback(
@@ -463,13 +463,13 @@ class TestLLMProviderProtocol:
         assert isinstance(results[0][0], Issue)
         assert isinstance(results[0][1], float)
 
-    def test_llm_provider_model_name_property(self):
+    def test_llm_provider_model_name_property(self) -> None:
         """Test model_name property."""
         provider = MockLLMProvider()
         assert isinstance(provider.model_name, str)
         assert provider.model_name == "test-model"
 
-    def test_llm_provider_max_context_tokens_property(self):
+    def test_llm_provider_max_context_tokens_property(self) -> None:
         """Test max_context_tokens property."""
         provider = MockLLMProvider()
         assert isinstance(provider.max_context_tokens, int)

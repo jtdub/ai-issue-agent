@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -303,7 +304,7 @@ class TestSafeGHCliClone:
         with patch("shutil.which", return_value="/usr/bin/gh"):
             return SafeGHCli()
 
-    async def test_clone_disables_hooks(self, gh: SafeGHCli, tmp_path) -> None:
+    async def test_clone_disables_hooks(self, gh: SafeGHCli, tmp_path: Path) -> None:
         """Test that clone disables git hooks for security."""
         with patch("asyncio.to_thread", new_callable=AsyncMock) as mock_thread:
             mock_proc = MagicMock()
@@ -319,7 +320,7 @@ class TestSafeGHCliClone:
             # The actual command includes -c core.hooksPath=/dev/null
             # which is verified through integration tests
 
-    async def test_clone_validates_repo_name(self, gh: SafeGHCli, tmp_path) -> None:
+    async def test_clone_validates_repo_name(self, gh: SafeGHCli, tmp_path: Path) -> None:
         """Test that clone validates repository names."""
         with pytest.raises(SecurityError, match="Invalid repository name"):
             await gh.clone_repository("malicious; rm -rf /", tmp_path)

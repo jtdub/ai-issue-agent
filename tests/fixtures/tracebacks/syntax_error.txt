@@ -1,0 +1,4 @@
+  File "/app/src/config.py", line 25
+    if value ==
+              ^
+SyntaxError: invalid syntax

@@ -1,0 +1,14 @@
+Hey team, we're seeing this error in production:
+
+```python
+Traceback (most recent call last):
+  File "/app/src/api/endpoints.py", line 156, in get_user
+    user = await user_service.fetch(user_id)
+  File "/app/src/services/user_service.py", line 42, in fetch
+    return await self.repository.get_by_id(user_id)
+  File "/app/src/repositories/user_repo.py", line 28, in get_by_id
+    raise UserNotFoundError(f"User {user_id} not found")
+UserNotFoundError: User 12345 not found
+```
+
+Can someone take a look?
