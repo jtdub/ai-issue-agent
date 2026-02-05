@@ -113,8 +113,17 @@ See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed configuration op
 ### Usage
 
 ```bash
+# Validate configuration
+poetry run ai-issue-agent --dry-run
+
+# Run health check
+poetry run ai-issue-agent --health-check
+
 # Run the agent
 poetry run ai-issue-agent
+
+# Run with debug logging
+poetry run ai-issue-agent --debug --format console
 
 # Or activate the virtual environment
 poetry shell
@@ -262,6 +271,28 @@ Security is a top priority. The project implements:
 
 See [docs/SECURITY.md](docs/SECURITY.md) for comprehensive security documentation.
 
+## Observability
+
+Built-in observability features:
+
+- **Structured Logging**: JSON or console output with secret sanitization
+- **Health Checks**: Verify all dependencies are operational
+- **Metrics Collection**: Track message processing, issue creation, and errors
+- **Context Correlation**: Request IDs and context propagation
+
+```bash
+# Run health check
+ai-issue-agent --health-check
+
+# Enable JSON logging for log aggregation
+ai-issue-agent --format json
+
+# Debug mode for development
+ai-issue-agent --debug
+```
+
+See [docs/admin-guide/monitoring.md](docs/admin-guide/monitoring.md) for monitoring setup.
+
 ## Technology Stack
 
 - **Python**: 3.11+ required for modern type hints
@@ -269,15 +300,49 @@ See [docs/SECURITY.md](docs/SECURITY.md) for comprehensive security documentatio
 - **Async**: All I/O uses async/await with asyncio
 - **Type Checking**: Full strict mypy mode
 - **Validation**: Pydantic v2 for data models and configuration
-- **Logging**: structlog for structured logging
+- **Logging**: structlog for structured logging with secret sanitization
 - **Testing**: pytest with 98%+ coverage
 - **Linting**: ruff for fast linting and formatting
 - **Security**: pip-audit for dependency scanning
 
-## Contributing
+## Troubleshooting
 
-Contributions are welcome! Please see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for guidelines.
+### Common Issues
 
+**Slack Connection Failed**
+```bash
+# Verify tokens
+echo $SLACK_BOT_TOKEN | head -c 10  # Should show xoxb-
+echo $SLACK_APP_TOKEN | head -c 10  # Should show xapp-
+
+# Check Socket Mode is enabled in Slack app settings
+```
+
+**GitHub Auth Failed**
+```bash
+# Re-authenticate
+gh auth login
+
+# Verify auth
+gh auth status
+```
+
+**LLM Errors**
+```bash
+# Verify API key (Anthropic example)
+curl -H "x-api-key: $ANTHROPIC_API_KEY" \
+     -H "anthropic-version: 2023-06-01" \
+     https://api.anthropic.com/v1/messages \
+     -d '{"model":"claude-3-5-sonnet-20241022","max_tokens":10,"messages":[{"role":"user","content":"Hi"}]}'
+```
+
+**Configuration Errors**
+```bash
+# Validate configuration
+ai-issue-agent --config config/config.yaml --dry-run
+```
+
+See [docs/user-guide/troubleshooting.md](docs/user-guide/troubleshooting.md) for more.
 Key points:
 1. Fork the repository
 2. Create a feature branch

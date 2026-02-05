@@ -131,6 +131,39 @@ class AnalysisConfig(BaseModel):
     include_files: list[str] = ["README.md"]
 
 
+class FileLoggingConfig(BaseModel):
+    """File logging configuration."""
+
+    enabled: bool = False
+    path: Path = Path("/var/log/ai-issue-agent/agent.log")
+    rotation: str = "10 MB"
+    retention: int = Field(7, ge=1, description="Retention period in days")
+
+
+class LoggingConfig(BaseModel):
+    """Logging configuration."""
+
+    level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    format: Literal["json", "console"] = "json"
+    file: FileLoggingConfig = FileLoggingConfig()
+
+
+class RuntimeConfig(BaseModel):
+    """Runtime configuration."""
+
+    max_concurrent: int = Field(5, ge=1, le=50, description="Max concurrent message processing")
+    processing_timeout: int = Field(300, ge=30, le=600, description="Pipeline timeout in seconds")
+
+
+class RetryConfig(BaseModel):
+    """Retry configuration for transient failures."""
+
+    max_attempts: int = Field(3, ge=1, le=10)
+    initial_delay: float = Field(1.0, ge=0.1, le=10.0)
+    max_delay: float = Field(30.0, ge=1.0, le=300.0)
+    exponential_base: float = Field(2.0, ge=1.5, le=4.0)
+
+
 class ChatConfig(BaseModel):
     """Chat provider configuration."""
 
@@ -175,6 +208,9 @@ class AgentConfig(BaseSettings):
     llm: LLMConfig
     matching: MatchingConfig = MatchingConfig()
     analysis: AnalysisConfig = AnalysisConfig()
+    logging: LoggingConfig = LoggingConfig()
+    runtime: RuntimeConfig = RuntimeConfig()
+    retry: RetryConfig = RetryConfig()
 
     model_config = SettingsConfigDict(
         env_file=".env",
