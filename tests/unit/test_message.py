@@ -178,6 +178,6 @@ class TestProcessingResult:
         """Test using ProcessingResult in conditional logic."""
         result = ProcessingResult.NO_TRACEBACK
 
-        processed = result == ProcessingResult.NO_TRACEBACK
+        processed = result is ProcessingResult.NO_TRACEBACK
 
         assert processed
