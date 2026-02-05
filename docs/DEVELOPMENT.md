@@ -23,7 +23,7 @@ cd ai-issue-agent
 curl -sSL https://install.python-poetry.org | python3 -
 
 # Install all dependencies (including dev and docs)
-poetry install --with dev,docs
+poetry install --extras "dev docs"
 
 # Activate the virtual environment
 poetry shell
@@ -588,7 +588,7 @@ test(security): add tests for secret redaction
 
 ```bash
 # Install docs dependencies
-poetry install --with docs
+poetry install --extras docs
 
 # Serve locally
 poetry run mkdocs serve

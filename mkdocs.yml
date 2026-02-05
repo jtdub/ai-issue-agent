@@ -79,6 +79,7 @@ nav:
       - Performance Tuning: admin-guide/performance.md
   - Developer Guide:
       - Architecture: developer-guide/architecture.md
+      - Core Components: developer-guide/core-components.md
       - Development Setup: developer-guide/setup.md
       - Contributing: developer-guide/contributing.md
       - Testing: developer-guide/testing.md

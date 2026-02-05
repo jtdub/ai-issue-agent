@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AI Issue Agent is an automation system that monitors chat platforms (Slack) for Python tracebacks and automatically triages them as GitHub issues. When a traceback is detected, it parses the error, searches for existing related issues, and either links to an existing issue or creates a new one with LLM-powered analysis.
 
-**Status**: Active development - Phases 1-4 complete. Core infrastructure, data models, interfaces, and all adapters (Slack, GitHub, Anthropic) are implemented. Working on Phase 5 (core business logic).
+**Status**: Active development - Phases 1-5 complete. Core infrastructure, data models, interfaces, all adapters (Slack, GitHub, Anthropic), and core business logic (IssueMatcher, CodeAnalyzer, MessageHandler, Agent) are implemented. Observability features (health checks, structured logging, metrics) are also complete. Working on Phase 6 (E2E tests, additional LLM adapters).
 
 ## Technology Stack
 
@@ -25,8 +25,8 @@ The project uses **Poetry** for dependency management:
 ```bash
 # Install dependencies
 poetry install                  # Core dependencies only
-poetry install --with dev       # Include development dependencies
-poetry install --with docs      # Include documentation dependencies
+poetry install --extras dev       # Include development dependencies
+poetry install --extras docs     # Include documentation dependencies
 
 # Run the agent
 poetry run ai-issue-agent

@@ -69,16 +69,6 @@ Built on asyncio with rate limiting, retry logic, and efficient resource managem
     poetry install
     ```
 
-=== "pip"
-    ```bash
-    pip install ai-issue-agent
-    ```
-
-=== "pipx"
-    ```bash
-    pipx install ai-issue-agent
-    ```
-
 === "From source"
     ```bash
     git clone https://github.com/jtdub/ai-issue-agent.git
@@ -91,16 +81,13 @@ Configure your environment:
 ```bash
 export SLACK_BOT_TOKEN="xoxb-..."
 export SLACK_APP_TOKEN="xapp-..."
-export GITHUB_TOKEN="ghp_..."
-export OPENAI_API_KEY="sk-..."
+export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
 Run the agent:
 
 ```bash
-poetry run ai-issue-agent --config config.yaml
-# Or if installed with pip:
-ai-issue-agent --config config.yaml
+poetry run ai-issue-agent --config config/config.yaml
 ```
 
 ## Documentation Sections

@@ -48,20 +48,21 @@ An intelligent automation system that monitors chat platforms (Slack, Discord, T
 - **🔌 Pluggable Architecture**: Swap chat, VCS, and LLM providers via configuration
 - **⚡ Async-First**: All I/O operations use async/await for high performance
 - **📊 Type Safe**: Full mypy strict mode compliance
-- **🧪 Well Tested**: 98%+ test coverage
+- **🧪 Well Tested**: 80%+ test coverage
 
 ## Status
 
-**Current Phase**: Phase 5 - Core Business Logic
+**Current Phase**: Phase 6 - Integration & Polish
 
 ✅ **Completed:**
 - Phase 1: Project Setup & Core Infrastructure (security utilities, async helpers, CI/CD)
 - Phase 2: Data Models & Interfaces (traceback, issue, message, analysis models)
 - Phase 3: Traceback Parser (full parser with edge case handling)
 - Phase 4: Adapters (Slack, GitHub, Anthropic implementations)
+- Phase 5: Core Business Logic (Issue Matcher, Code Analyzer, Message Handler, Agent)
 
 🚧 **In Progress:**
-- Phase 5: Core Business Logic (Issue Matcher, Code Analyzer, Message Handler, Agent)
+- Phase 6: Integration & Polish (E2E tests, OpenAI/Ollama adapters, documentation)
 
 See [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) for the full roadmap.
 
@@ -86,10 +87,10 @@ cd ai-issue-agent
 poetry install
 
 # Install with development dependencies
-poetry install --with dev
+poetry install --extras dev
 
 # Install with documentation dependencies
-poetry install --with docs
+poetry install --extras docs
 ```
 
 ### Configuration
@@ -108,7 +109,7 @@ export ANTHROPIC_API_KEY="sk-ant-your-api-key"
 
 3. Edit `config/config.yaml` to customize settings.
 
-See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed configuration options.
+See [docs/user-guide/configuration.md](docs/user-guide/configuration.md) for detailed configuration options.
 
 ### Usage
 
@@ -136,7 +137,7 @@ ai-issue-agent
 
 ```bash
 # Install with all dependencies
-poetry install --with dev,docs
+poetry install --extras "dev docs"
 
 # Install pre-commit hooks
 poetry run pre-commit install
@@ -180,7 +181,8 @@ ai-issue-agent/
 │       │   ├── agent.py         # Main orchestrator
 │       │   ├── traceback_parser.py
 │       │   ├── issue_matcher.py
-│       │   └── code_analyzer.py
+│       │   ├── code_analyzer.py
+│       │   └── message_handler.py  # Processing pipeline
 │       ├── interfaces/          # Protocol definitions
 │       │   ├── chat.py          # ChatProvider
 │       │   ├── vcs.py           # VCSProvider
@@ -193,9 +195,12 @@ ai-issue-agent/
 │       └── utils/               # Utilities
 │           ├── security.py      # SecretRedactor
 │           ├── safe_subprocess.py  # SafeGHCli
-│           └── async_helpers.py    # Retry, rate limiting
+│           ├── async_helpers.py    # Retry, rate limiting
+│           ├── health.py        # Health checks
+│           ├── logging.py       # Structured logging
+│           └── metrics.py       # Observability metrics
 ├── tests/
-│   ├── unit/                    # Unit tests (98% coverage)
+│   ├── unit/                    # Unit tests
 │   ├── integration/             # Integration tests
 │   ├── e2e/                     # End-to-end tests
 │   └── fixtures/                # Test data
@@ -236,7 +241,7 @@ Build and serve documentation locally:
 
 ```bash
 # Install docs dependencies
-poetry install --with docs
+poetry install --extras docs
 
 # Serve documentation
 poetry run mkdocs serve
@@ -301,7 +306,7 @@ See [docs/admin-guide/monitoring.md](docs/admin-guide/monitoring.md) for monitor
 - **Type Checking**: Full strict mypy mode
 - **Validation**: Pydantic v2 for data models and configuration
 - **Logging**: structlog for structured logging with secret sanitization
-- **Testing**: pytest with 98%+ coverage
+- **Testing**: pytest with 80%+ coverage
 - **Linting**: ruff for fast linting and formatting
 - **Security**: pip-audit for dependency scanning
 

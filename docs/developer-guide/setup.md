@@ -26,7 +26,7 @@ The project uses [Poetry](https://python-poetry.org/) for dependency management.
     curl -sSL https://install.python-poetry.org | python3 -
     
     # Install dependencies
-    poetry install --with dev,docs
+    poetry install --extras "dev docs"
     
     # Install pre-commit hooks
     poetry run pre-commit install

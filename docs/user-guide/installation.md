@@ -63,7 +63,7 @@ cd ai-issue-agent
 curl -sSL https://install.python-poetry.org | python3 -
 
 # Install with development dependencies
-poetry install --with dev
+poetry install --extras dev
 
 # Install pre-commit hooks
 poetry run pre-commit install
