@@ -35,7 +35,7 @@ class ChatProvider(Protocol):
         """
         ...
 
-    async def listen(self) -> AsyncIterator[ChatMessage]:
+    def listen(self) -> AsyncIterator[ChatMessage]:
         """
         Yield incoming messages from monitored channels.
 

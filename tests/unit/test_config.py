@@ -216,7 +216,7 @@ class TestMatchingConfig:
 
     def test_default_values(self) -> None:
         """Test default matching configuration values."""
-        config = MatchingConfig()
+        config = MatchingConfig()  # type: ignore[call-arg]
         assert config.confidence_threshold == 0.85
         assert config.max_search_results == 20
         assert config.include_closed is True
@@ -225,28 +225,28 @@ class TestMatchingConfig:
     def test_confidence_threshold_bounds(self) -> None:
         """Test that confidence_threshold is bounded between 0 and 1."""
         # Valid values
-        MatchingConfig(confidence_threshold=0.0)
-        MatchingConfig(confidence_threshold=0.5)
-        MatchingConfig(confidence_threshold=1.0)
+        MatchingConfig(confidence_threshold=0.0)  # type: ignore[call-arg]
+        MatchingConfig(confidence_threshold=0.5)  # type: ignore[call-arg]
+        MatchingConfig(confidence_threshold=1.0)  # type: ignore[call-arg]
 
         # Invalid values
         with pytest.raises(ValidationError):
-            MatchingConfig(confidence_threshold=-0.1)
+            MatchingConfig(confidence_threshold=-0.1)  # type: ignore[call-arg]
         with pytest.raises(ValidationError):
-            MatchingConfig(confidence_threshold=1.1)
+            MatchingConfig(confidence_threshold=1.1)  # type: ignore[call-arg]
 
     def test_max_search_results_bounds(self) -> None:
         """Test that max_search_results is bounded."""
         # Valid values
-        MatchingConfig(max_search_results=1)
-        MatchingConfig(max_search_results=50)
-        MatchingConfig(max_search_results=100)
+        MatchingConfig(max_search_results=1)  # type: ignore[call-arg]
+        MatchingConfig(max_search_results=50)  # type: ignore[call-arg]
+        MatchingConfig(max_search_results=100)  # type: ignore[call-arg]
 
         # Invalid values
         with pytest.raises(ValidationError):
-            MatchingConfig(max_search_results=0)
+            MatchingConfig(max_search_results=0)  # type: ignore[call-arg]
         with pytest.raises(ValidationError):
-            MatchingConfig(max_search_results=101)
+            MatchingConfig(max_search_results=101)  # type: ignore[call-arg]
 
 
 class TestAnalysisConfig:
@@ -254,7 +254,7 @@ class TestAnalysisConfig:
 
     def test_default_values(self) -> None:
         """Test default analysis configuration values."""
-        config = AnalysisConfig()
+        config = AnalysisConfig()  # type: ignore[call-arg]
         assert config.context_lines == 15
         assert config.max_files == 10
         assert "/usr/lib/python" in config.skip_paths
@@ -263,28 +263,28 @@ class TestAnalysisConfig:
     def test_context_lines_bounds(self) -> None:
         """Test that context_lines is bounded."""
         # Valid values
-        AnalysisConfig(context_lines=1)
-        AnalysisConfig(context_lines=50)
-        AnalysisConfig(context_lines=100)
+        AnalysisConfig(context_lines=1)  # type: ignore[call-arg]
+        AnalysisConfig(context_lines=50)  # type: ignore[call-arg]
+        AnalysisConfig(context_lines=100)  # type: ignore[call-arg]
 
         # Invalid values
         with pytest.raises(ValidationError):
-            AnalysisConfig(context_lines=0)
+            AnalysisConfig(context_lines=0)  # type: ignore[call-arg]
         with pytest.raises(ValidationError):
-            AnalysisConfig(context_lines=101)
+            AnalysisConfig(context_lines=101)  # type: ignore[call-arg]
 
     def test_max_files_bounds(self) -> None:
         """Test that max_files is bounded."""
         # Valid values
-        AnalysisConfig(max_files=1)
-        AnalysisConfig(max_files=25)
-        AnalysisConfig(max_files=50)
+        AnalysisConfig(max_files=1)  # type: ignore[call-arg]
+        AnalysisConfig(max_files=25)  # type: ignore[call-arg]
+        AnalysisConfig(max_files=50)  # type: ignore[call-arg]
 
         # Invalid values
         with pytest.raises(ValidationError):
-            AnalysisConfig(max_files=0)
+            AnalysisConfig(max_files=0)  # type: ignore[call-arg]
         with pytest.raises(ValidationError):
-            AnalysisConfig(max_files=51)
+            AnalysisConfig(max_files=51)  # type: ignore[call-arg]
 
 
 class TestLoadConfig:
@@ -369,7 +369,8 @@ class TestValidateConfig:
     def test_slack_provider_without_slack_config(self) -> None:
         """Test that selecting slack provider without slack config raises error."""
         chat_config = ChatConfig(provider="slack", slack=None)
-        vcs_config = VCSConfig(provider="github", github=GitHubConfig(default_repo="owner/repo"))
+        github = GitHubConfig(default_repo="owner/repo")
+        vcs_config = VCSConfig(provider="github", github=github)
         llm_config = LLMConfig(provider="anthropic", anthropic=AnthropicConfig(api_key="test"))
 
         config = AgentConfig(chat=chat_config, vcs=vcs_config, llm=llm_config)

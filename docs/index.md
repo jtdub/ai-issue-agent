@@ -125,4 +125,4 @@ Detailed security documentation, implementation plans, and API reference.
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/jtdub/ai-issue-agent/blob/main/LICENSE) for details.
+Apache License 2.0 - see [LICENSE](https://github.com/jtdub/ai-issue-agent/blob/main/LICENSE) for details.
